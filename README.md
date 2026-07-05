@@ -51,6 +51,24 @@ DataPilot is an open-source Python library that automates Exploratory Data Analy
 
 ## Installation
 
+### From PyPI (Recommended)
+
+To install the stable release:
+```bash
+pip install datapilot-polars
+```
+
+To install with optional cloud AI provider dependencies:
+```bash
+pip install "datapilot-polars[openai]"    # OpenAI support
+pip install "datapilot-polars[gemini]"    # Google Gemini support
+pip install "datapilot-polars[claude]"    # Anthropic Claude support
+pip install "datapilot-polars[groq]"      # Groq support (free tier)
+pip install "datapilot-polars[all-ai]"    # All cloud AI providers at once
+```
+
+### From Source (Development)
+
 ```bash
 # Clone and install in editable mode
 git clone https://github.com/nx-manoj/DataPilot.git
