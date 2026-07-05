@@ -1,11 +1,11 @@
 # 📖 DataPilot — Your Data Science Copilot
 
 [![Python Version](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
-[![Version](https://img.shields.io/badge/version-0.3.0-brightgreen.svg)](https://github.com/yourusername/datapilot)
+[![Version](https://img.shields.io/badge/version-0.3.0-brightgreen.svg)](https://github.com/nx-manoj/DataPilot)
 [![Core Engine](https://img.shields.io/badge/Powered%20By-Polars%20%7C%20Apache%20Arrow-orange.svg)](https://pola.rs/)
-[![AI Providers](https://img.shields.io/badge/AI-Ollama%20%7C%20OpenAI%20%7C%20Gemini%20%7C%20Claude%20%7C%20Groq-purple.svg)](https://github.com/yourusername/datapilot)
+[![AI Providers](https://img.shields.io/badge/AI-Ollama%20%7C%20OpenAI%20%7C%20Gemini%20%7C%20Claude%20%7C%20Groq-purple.svg)](https://github.com/nx-manoj/DataPilot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-30%20passed-success.svg)](https://github.com/yourusername/datapilot)
+[![Tests](https://img.shields.io/badge/tests-30%20passed-success.svg)](https://github.com/nx-manoj/DataPilot)
 
 > **The only EDA library that is Polars-native, multi-provider AI-powered, and actually cleans your data.**
 
@@ -53,8 +53,8 @@ DataPilot is an open-source Python library that automates Exploratory Data Analy
 
 ```bash
 # Clone and install in editable mode
-git clone https://github.com/yourusername/datapilot.git
-cd datapilot
+git clone https://github.com/nx-manoj/DataPilot.git
+cd DataPilot
 
 uv venv && source .venv/bin/activate
 uv pip install -e .
@@ -499,8 +499,8 @@ pip install datapilot-polars[all-ai]    # All cloud providers at once
 ### Basic Setup
 
 ```bash
-git clone https://github.com/yourusername/datapilot.git
-cd datapilot
+git clone https://github.com/nx-manoj/DataPilot.git
+cd DataPilot
 
 uv venv
 source .venv/bin/activate
