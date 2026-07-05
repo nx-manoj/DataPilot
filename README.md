@@ -435,10 +435,11 @@ DataPilot uses a **Metadata-Only AI Pattern** — raw data rows are **never** tr
 | Provider | Type | Default Model | Requires |
 |----------|------|--------------|----------|
 | `ollama` | 🔒 Local / Private | `llama3` | Ollama daemon running locally |
-| `openai` | ☁️ Cloud | `gpt-4o-mini` | `pip install datapilot[openai]` + API key |
-| `gemini` | ☁️ Cloud | `gemini-1.5-flash` | `pip install datapilot[gemini]` + API key |
-| `claude` | ☁️ Cloud | `claude-3-haiku-20240307` | `pip install datapilot[claude]` + API key |
-| `groq`   | ☁️ Cloud (free tier) | `llama3-70b-8192` | `pip install datapilot[groq]` + API key |
+| `openai` | ☁️ Cloud | `gpt-4o-mini` | `pip install datapilot-polars[openai]` + API key |
+| `gemini` | ☁️ Cloud | `gemini-1.5-flash` | `pip install datapilot-polars[gemini]` + API key |
+| `claude` | ☁️ Cloud | `claude-3-haiku-20240307` | `pip install datapilot-polars[claude]` + API key |
+| `groq`   | ☁️ Cloud (free tier) | `llama3-70b-8192` | `pip install datapilot-polars[groq]` + API key |
+
 
 ### Usage
 
@@ -467,11 +468,11 @@ dp.analyze(df, use_ai=True, ai_provider="groq", ai_model="mixtral-8x7b-32768", a
 ### Install Only What You Need
 
 ```bash
-pip install datapilot[openai]    # OpenAI only
-pip install datapilot[gemini]    # Google Gemini only
-pip install datapilot[claude]    # Anthropic Claude only
-pip install datapilot[groq]      # Groq only (free tier)
-pip install datapilot[all-ai]    # All cloud providers at once
+pip install datapilot-polars[openai]    # OpenAI only
+pip install datapilot-polars[gemini]    # Google Gemini only
+pip install datapilot-polars[claude]    # Anthropic Claude only
+pip install datapilot-polars[groq]      # Groq only (free tier)
+pip install datapilot-polars[all-ai]    # All cloud providers at once
 ```
 
 ### AI Output Example
@@ -550,7 +551,7 @@ ollama serve   # make sure the Ollama daemon is running
 ### AI: Missing cloud provider package
 ```bash
 # Install the extra for your chosen provider
-pip install datapilot[openai]   # or gemini / claude / groq / all-ai
+pip install datapilot-polars[openai]   # or gemini / claude / groq / all-ai
 ```
 
 ### AI: Invalid or missing API key
