@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.4.3] - 2026-07-06
+
+### Fixed
+- `dp.analyze()` now correctly reads AI provider, model, and API key from `dp.configure()` instead of ignoring the session config (broke `dp.configure(...); dp.analyze(df, use_ai=True)` workflows).
+- `dp.ask_ai()` response was displayed twice in Jupyter notebooks — once via `print()` and once as the cell's return value. Fixed with a `_SilentStr` return wrapper whose `__repr__` suppresses the auto-display.
+- `dp.correlation()` now uses pairwise drop-nulls instead of Polars' global `.corr()`, which propagated `NaN` across the entire row/column for any column with missing values (e.g. `Age` in Titanic). All valid pairs now return real correlation values.
+- Strong correlation pairs (`strong_positive` / `strong_negative`) were always empty when any numeric column had nulls — fixed as a direct result of the above pairwise approach.
+
+---
+
 ## [0.2.0] - 2026-07-05
 
 ### Added

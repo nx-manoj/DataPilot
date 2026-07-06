@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "datapilot-polars"
-version = "0.4.2"
+version = "0.4.3"
 description = "Your Data Science Copilot — Polars-native EDA, auto-cleaning, drift detection, and multi-provider AI insights"
 readme = "README.md"
 requires-python = ">=3.9"

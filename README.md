@@ -1,7 +1,7 @@
 # 📖 DataPilot — Your Data Science Copilot
 
 [![Python Version](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
-[![Version](https://img.shields.io/badge/version-0.4.2-brightgreen.svg)](https://github.com/nx-manoj/DataPilot)
+[![Version](https://img.shields.io/badge/version-0.4.3-brightgreen.svg)](https://github.com/nx-manoj/DataPilot)
 [![Core Engine](https://img.shields.io/badge/Powered%20By-Polars%20%7C%20Apache%20Arrow-orange.svg)](https://pola.rs/)
 [![AI Providers](https://img.shields.io/badge/AI-Ollama%20%7C%20OpenAI%20%7C%20Gemini%20%7C%20Claude%20%7C%20Groq-purple.svg)](https://github.com/nx-manoj/DataPilot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

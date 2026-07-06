@@ -3,5 +3,5 @@ import datapilot as dp
 
 df = pd.read_csv("/home/manoj/Downloads/titanic.csv")
 
-dp.analyze(df,use_ai=True,ai_model="llama3")
-
+dp.configure(ai_provider='ollama', ai_model='llama3', api_key='ollama')
+dp.analyze(df, use_ai=True)

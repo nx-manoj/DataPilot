@@ -4,6 +4,7 @@ from .duplicates import duplicates
 from .correlations import correlation
 from ..utils.validation import ensure_polars
 from ..ai.insights import generate_insights
+from ..config import get_config
 
 import polars as pl
 from typing import Union, Optional
@@ -13,10 +14,10 @@ import pandas as pd
 def analyze(
     df: Union[pd.DataFrame, pl.DataFrame],
     use_ai: bool = False,
-    ai_provider: str = "ollama",
+    ai_provider: Optional[str] = None,
     ai_model: Optional[str] = None,
     api_key: Optional[str] = None,
-) -> None:
+) -> Optional[str]:
     """Runs automated exploratory data analysis pipelines and optionally
     fetches AI-powered recommendations from a local or cloud AI provider.
 
@@ -83,14 +84,23 @@ def analyze(
 
     # 3. Optional AI Copilot
     if use_ai:
-        provider_label = ai_provider.upper()
+        # Resolve settings: per-call overrides take priority over dp.configure() session config
+        cfg = get_config()
+        resolved_provider = ai_provider or cfg["ai_provider"]
+        resolved_model    = ai_model    or cfg["ai_model"]
+        resolved_key      = api_key     or cfg["api_key"]
+
+        provider_label = resolved_provider.upper()
         print(f"\n🤖 AI Copilot Insights  [{provider_label}]:")
         ai_output = generate_insights(
             meta=meta_stats,
             missing_list=miss_list,
             strong_relations=all_corrs,
-            model_name=ai_model or "",
-            ai_provider=ai_provider,
-            api_key=api_key,
+            model_name=resolved_model or "",
+            ai_provider=resolved_provider,
+            api_key=resolved_key,
         )
         print(ai_output)
+        return ai_output
+
+    return None

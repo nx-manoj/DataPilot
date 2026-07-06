@@ -24,6 +24,15 @@ from ..config import get_config
 from .factory import get_provider
 
 
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+class _SilentStr(str):
+    """A str subclass whose __repr__ returns '' so Jupyter doesn't auto-display
+    the return value of ask_ai() a second time (it's already printed)."""
+    def __repr__(self) -> str:
+        return ""
+
+
 # ── Internal helpers ──────────────────────────────────────────────────────────
 
 def _build_metadata_snapshot(local_df: pl.DataFrame) -> str:
@@ -160,7 +169,7 @@ def ask_ai(
         # Temporarily override the standard prompt-building with our chat-specific one
         answer = provider._call_with_raw_prompts(system_prompt, user_prompt)
         print(f"   A: {answer}\n")
-        return answer
+        return _SilentStr(answer)
     except AttributeError:
         # Fallback: provider doesn't have _call_with_raw_prompts yet — use generate()
         # Build a minimal meta dict the standard generate() expects
@@ -173,14 +182,14 @@ def ask_ai(
         }
         answer = provider.generate(meta, [], [f"User question: {question}\n\nContext:\n{snapshot}"])
         print(f"   A: {answer}\n")
-        return answer
+        return _SilentStr(answer)
     except ValueError as e:
         msg = f"⚠️  Configuration error: {e}"
         print(msg)
-        return msg
+        return _SilentStr(msg)
     except Exception as e:
         import logging
         logging.error(f"AI error: {e}", exc_info=True)
         msg = f"⚠️  AI error: {e}"
         print(msg)
-        return msg
+        return _SilentStr(msg)
