@@ -50,3 +50,23 @@ class GroqProvider(BaseAIProvider):
             return response.choices[0].message.content.strip()
         except Exception as e:
             return f"⚠️  Groq API error: {e}"
+
+    def _call_with_raw_prompts(self, system_prompt: str, user_prompt: str) -> str:
+        try:
+            from groq import Groq
+        except ImportError:
+            return "⚠️  Groq package not installed. Run: pip install groq"
+        try:
+            client   = Groq(api_key=self.api_key)
+            response = client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user",   "content": user_prompt},
+                ],
+                max_tokens=500,
+                temperature=0.4,
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            return f"⚠️  Groq API error: {e}"

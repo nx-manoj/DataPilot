@@ -1,7 +1,8 @@
 from ..utils.validation import ensure_polars
+from ..config import get_config
 import polars as pl
 import pandas as pd
-from typing import Union, Dict, Any, List
+from typing import Union, Dict, Any, List, Optional
 
 
 def outliers(
@@ -9,6 +10,10 @@ def outliers(
     method: str = "both",
     z_threshold: float = 3.0,
     iqr_multiplier: float = 1.5,
+    use_ai: bool = False,
+    ai_provider: Optional[str] = None,
+    ai_model: Optional[str] = None,
+    api_key: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Detects outliers in all numeric columns using IQR and/or Z-score methods.
 
@@ -98,5 +103,40 @@ def outliers(
         print(f"  🔍 {len(result)} column(s) contain outliers.")
         print("  💡 Tip: Cap outliers with IQR clipping or use robust scalers.")
     print("=" * 56)
+
+    # ── Optional AI Commentary ───────────────────────────────────────────────
+    if use_ai and result:
+        cfg           = get_config()
+        provider_name = ai_provider or cfg["ai_provider"]
+        model_name    = ai_model    or cfg["ai_model"]
+        key           = api_key     or cfg["api_key"]
+
+        issues_text = "\n".join(
+            f"- {col}: {info['count']} outliers ({info['percentage']}%) "
+            f"| severity={info['severity']} | extremes={info['values'][:3]}"
+            for col, info in result.items()
+        )
+        system_prompt = (
+            "You are DataPilot, an expert data scientist. "
+            "Given a list of numeric columns with outlier statistics, "
+            "provide 3-4 concise treatment recommendations (capping, log-transform, "
+            "robust scalers, domain-specific decisions). Be direct."
+        )
+        user_prompt = (
+            f"Method used: {method.upper()} | z-threshold: {z_threshold} | IQR×{iqr_multiplier}\n"
+            f"Outlier report:\n{issues_text}"
+        )
+        try:
+            from ..ai.factory import get_provider
+            provider = get_provider(
+                ai_provider=provider_name,
+                ai_model=model_name,
+                api_key=key,
+            )
+            ai_response = provider._call_with_raw_prompts(system_prompt, user_prompt)
+            print(f"\n\ud83e\udd16 AI Treatment Recommendations  [{provider_name.upper()}]:")
+            print(ai_response)
+        except Exception as e:
+            print(f"\n\u26a0\ufe0f  AI error: {e}")
 
     return result

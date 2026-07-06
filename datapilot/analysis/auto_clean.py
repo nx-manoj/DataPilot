@@ -1,7 +1,8 @@
 from ..utils.validation import ensure_polars
+from ..config import get_config
 import polars as pl
 import pandas as pd
-from typing import Union, Tuple, Dict, Any, List
+from typing import Union, Tuple, Dict, Any, List, Optional
 
 
 def auto_clean(
@@ -10,6 +11,10 @@ def auto_clean(
     impute_strategy: str = "auto",
     drop_id_columns: bool = True,
     drop_constant_columns: bool = True,
+    use_ai: bool = False,
+    ai_provider: Optional[str] = None,
+    ai_model: Optional[str] = None,
+    api_key: Optional[str] = None,
 ) -> Tuple[Union[pd.DataFrame, pl.DataFrame], List[Dict[str, Any]]]:
     """Automatically cleans a dataset by applying common preprocessing steps.
 
@@ -128,4 +133,41 @@ def auto_clean(
 
     # Return in original format
     result_df = clean_df.to_pandas() if original_engine == "pandas" else clean_df
+
+    # ── Optional AI Commentary ──────────────────────────────────────────────
+    if use_ai and change_log:
+        cfg           = get_config()
+        provider_name = ai_provider or cfg["ai_provider"]
+        model_name    = ai_model    or cfg["ai_model"]
+        key           = api_key     or cfg["api_key"]
+
+        log_text = "\n".join(
+            f"- [{e['action']}] {e['column']}: {e['reason']}"
+            for e in change_log
+        )
+        system_prompt = (
+            "You are DataPilot, a data cleaning expert. "
+            "Given a cleaning change log, explain in 3-4 bullet points "
+            "why these changes improve ML model quality and what the user "
+            "should do next (feature engineering, encoding, splitting). "
+            "Be concise and direct."
+        )
+        user_prompt = (
+            f"Input: {total_rows:,} rows × {local_df.width} cols → "
+            f"Output: {clean_df.height:,} rows × {clean_df.width} cols\n"
+            f"Change log:\n{log_text}"
+        )
+        try:
+            from ..ai.factory import get_provider
+            provider = get_provider(
+                ai_provider=provider_name,
+                ai_model=model_name,
+                api_key=key,
+            )
+            ai_response = provider._call_with_raw_prompts(system_prompt, user_prompt)
+            print(f"\n\ud83e\udd16 AI Summary  [{provider_name.upper()}]:")
+            print(ai_response)
+        except Exception as e:
+            print(f"\n\u26a0\ufe0f  AI error: {e}")
+
     return result_df, change_log

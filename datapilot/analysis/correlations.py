@@ -2,6 +2,7 @@ from ..utils.validation import ensure_polars
 import polars as pl
 from typing import Union, Dict, Any
 import pandas as pd
+import math
 
 def correlation(df: Union[pd.DataFrame, pl.DataFrame], threshold: float = 0.6) -> Dict[str, Any]:
     """Calculates a high-speed Pearson correlation matrix and flags strong pairs."""
@@ -24,7 +25,9 @@ def correlation(df: Union[pd.DataFrame, pl.DataFrame], threshold: float = 0.6) -
     for i in range(len(cols)):
         for j in range(i + 1, len(cols)):
             val = corr_matrix[i, j]
-            if val is not None:
+            # Guard against both Python None and IEEE-754 NaN — the latter
+            # is what Polars returns for degenerate pairs (e.g. constant cols).
+            if val is not None and not (isinstance(val, float) and math.isnan(val)):
                 pair = f"{cols[i]} ↔ {cols[j]}"
                 if val >= threshold:
                     strong_pos.append((pair, round(val, 3)))

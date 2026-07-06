@@ -14,9 +14,9 @@ class OllamaProvider(BaseAIProvider):
 
     def generate(
         self,
-        meta: Dict[str, Any],
-        missing_list: List[Dict[str, Any]],
-        strong_relations: List[str],
+        meta,
+        missing_list,
+        strong_relations,
     ) -> str:
         try:
             import ollama
@@ -25,6 +25,23 @@ class OllamaProvider(BaseAIProvider):
                 messages=[
                     {"role": "system", "content": self._build_system_prompt()},
                     {"role": "user",   "content": self._build_user_prompt(meta, missing_list, strong_relations)},
+                ],
+            )
+            return response["message"]["content"].strip()
+        except Exception as e:
+            return (
+                f"⚠️  Could not reach Ollama. Ensure it is running (`ollama serve`). "
+                f"Error: {e}"
+            )
+
+    def _call_with_raw_prompts(self, system_prompt: str, user_prompt: str) -> str:
+        try:
+            import ollama
+            response = ollama.chat(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user",   "content": user_prompt},
                 ],
             )
             return response["message"]["content"].strip()

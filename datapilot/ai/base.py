@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 
 class BaseAIProvider(ABC):
@@ -55,3 +55,25 @@ class BaseAIProvider(ABC):
             f"- Missing Data: {missing_list}\n"
             f"- Strong Correlations: {strong_relations}\n"
         )
+
+    def _call_with_raw_prompts(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+    ) -> str:
+        """Send arbitrary system + user prompts to the provider.
+
+        Used by dp.ask_ai() and dp.visualize_ai() for free-form queries.
+        Subclasses should override this for direct access to the chat API;
+        the default falls back to the structured generate() interface.
+
+        Args:
+            system_prompt: The system/instruction message.
+            user_prompt:   The user message (typically includes dataset context).
+
+        Returns:
+            Plain-text AI response string.
+        """
+        # Default fallback: pack prompts into the generate() interface
+        meta = {"rows": 0, "columns": 0, "duplicates_count": "N/A"}
+        return self.generate(meta, [], [user_prompt])

@@ -1,7 +1,8 @@
 from ..utils.validation import ensure_polars
+from ..config import get_config
 import polars as pl
 import pandas as pd
-from typing import Union, Dict, Any, List
+from typing import Union, Dict, Any, List, Optional
 import math
 
 
@@ -29,6 +30,10 @@ def compare(
     df_train: Union[pd.DataFrame, pl.DataFrame],
     df_test: Union[pd.DataFrame, pl.DataFrame],
     threshold: float = 0.1,
+    use_ai: bool = False,
+    ai_provider: Optional[str] = None,
+    ai_model: Optional[str] = None,
+    api_key: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """Detects distribution drift between a training and test/production DataFrame.
 
@@ -125,5 +130,44 @@ def compare(
         print(f"  🚨 {len(drift_flags)} column(s) flagged with potential distribution drift.")
         print("  💡 Drift can cause model degradation in production. Investigate flagged columns.")
     print("=" * 60)
+
+    # ── Optional AI Commentary ────────────────────────────────────────────────
+    if use_ai and drift_flags:
+        cfg           = get_config()
+        provider_name = ai_provider or cfg["ai_provider"]
+        model_name    = ai_model    or cfg["ai_model"]
+        key           = api_key     or cfg["api_key"]
+
+        flags_text = "\n".join(
+            f"- {f['column']} ({f['type']}): severity={f['severity']}, "
+            + (
+                f"mean shift={f.get('mean_shift_pct', 'N/A')}%"
+                if f["type"] == "numeric" else
+                f"JS divergence={f.get('js_divergence', 'N/A')}"
+            )
+            for f in drift_flags
+        )
+        system_prompt = (
+            "You are DataPilot, a production ML expert. "
+            "Given a list of features with distribution drift between train and test data, "
+            "suggest 3-4 concrete mitigations (e.g. retraining window, feature monitoring, "
+            "stratified sampling, drift-aware models). Be direct and technical."
+        )
+        user_prompt = (
+            f"Train: {train_df.height:,} rows | Test: {test_df.height:,} rows\n"
+            f"Drift flags (JS threshold={threshold}):\n{flags_text}"
+        )
+        try:
+            from ..ai.factory import get_provider
+            provider = get_provider(
+                ai_provider=provider_name,
+                ai_model=model_name,
+                api_key=key,
+            )
+            ai_response = provider._call_with_raw_prompts(system_prompt, user_prompt)
+            print(f"\n\ud83e\udd16 AI Drift Mitigations  [{provider_name.upper()}]:")
+            print(ai_response)
+        except Exception as e:
+            print(f"\n\u26a0\ufe0f  AI error: {e}")
 
     return drift_flags
