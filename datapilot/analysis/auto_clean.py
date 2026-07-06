@@ -110,9 +110,9 @@ def auto_clean(
                     print(f"\n  🔧  IMPUTE '{col}'  →  filled {null_ct} null(s) with median={round(median_val, 4)}")
         else:
             if impute_strategy in ("auto", "mode"):
-                mode_series = clean_df[col].drop_nulls().value_counts().sort("count", descending=True)
-                if mode_series.height > 0:
-                    mode_val = str(mode_series["value"][0])
+                modes = clean_df[col].drop_nulls().mode()
+                if modes.len() > 0:
+                    mode_val = str(modes[0])
                     impute_exprs.append(pl.col(col).fill_null(mode_val))
                     change_log.append({
                         "action": "IMPUTED",
@@ -168,6 +168,8 @@ def auto_clean(
             print(f"\n\ud83e\udd16 AI Summary  [{provider_name.upper()}]:")
             print(ai_response)
         except Exception as e:
-            print(f"\n\u26a0\ufe0f  AI error: {e}")
+            import logging
+            logging.error(f"AI error: {e}", exc_info=True)
+            print(f"\n⚠️  AI error: {e}")
 
     return result_df, change_log

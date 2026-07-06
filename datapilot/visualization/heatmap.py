@@ -35,7 +35,7 @@ def _apply_theme() -> None:
     })
 
 
-def heatmap(df: Union[pd.DataFrame, pl.DataFrame]) -> None:
+def heatmap(df: Union[pd.DataFrame, pl.DataFrame]) -> plt.Axes:
     """Plots a lower-triangle Pearson correlation heatmap for numeric features.
 
     Renders only the lower triangle to reduce visual clutter.  Cell values
@@ -101,101 +101,7 @@ def heatmap(df: Union[pd.DataFrame, pl.DataFrame]) -> None:
     ax.tick_params(axis="y", rotation=0,  labelsize=9)
     fig.patch.set_facecolor(_BG)
     plt.tight_layout()
-    plt.show()
+    return ax
 
 
-def scatter(
-    df: Union[pd.DataFrame, pl.DataFrame],
-    x: str,
-    y: str,
-    hue: str | None = None,
-    trendline: bool = True,
-) -> None:
-    """Scatter plot with an optional OLS regression trendline.
 
-    Args:
-        df:        Input DataFrame (Pandas or Polars).
-        x:         Column name for the horizontal axis.
-        y:         Column name for the vertical axis.
-        hue:       Optional column for colour grouping.
-        trendline: Draw a dashed regression line when hue is not set (default: True).
-    """
-    local_df, _ = ensure_polars(df)
-    for col in [x, y] + ([hue] if hue else []):
-        if col not in local_df.columns:
-            raise ValueError(f"Column '{col}' not found.")
-
-    pdf = local_df.to_pandas()
-    _apply_theme()
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-
-    sns.scatterplot(
-        data=pdf, x=x, y=y, hue=hue,
-        palette="mako", ax=ax,
-        alpha=0.75, s=45, linewidth=0,
-    )
-
-    if trendline and not hue:
-        _x = pdf[x].dropna()
-        _y = pdf[y].dropna()
-        common = _x.index.intersection(_y.index)
-        if len(common) > 2:
-            z    = np.polyfit(_x[common], _y[common], 1)
-            p    = np.poly1d(z)
-            xrng = np.linspace(_x.min(), _x.max(), 200)
-            ax.plot(xrng, p(xrng), color="#f43f5e",
-                    linewidth=2, linestyle="--", label="OLS trend", zorder=5)
-            ax.legend(fontsize=9)
-
-    ax.set_title(f"{y}  vs  {x}", fontsize=13, fontweight="bold", pad=12)
-    ax.set_xlabel(x, fontsize=11)
-    ax.set_ylabel(y, fontsize=11)
-    fig.patch.set_facecolor(_BG)
-    plt.tight_layout()
-    plt.show()
-
-
-def violin(
-    df: Union[pd.DataFrame, pl.DataFrame],
-    column: str,
-    group_by: str | None = None,
-) -> None:
-    """Violin plot — combines a box plot with a KDE for richer distribution insight.
-
-    Args:
-        df:       Input DataFrame (Pandas or Polars).
-        column:   Target numeric column.
-        group_by: Optional categorical column to split violins by group.
-    """
-    local_df, _ = ensure_polars(df)
-    if column not in local_df.columns:
-        raise ValueError(f"Column '{column}' not found.")
-
-    pdf = local_df.to_pandas()
-    _apply_theme()
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-
-    sns.violinplot(
-        data=pdf,
-        x=group_by,
-        y=column,
-        hue=group_by,
-        palette="mako" if group_by else None,
-        color="#3b82f6" if not group_by else None,
-        ax=ax,
-        inner="quartile",
-        linewidth=0.9,
-        legend=False,
-    )
-
-    title = f"Violin Plot of  {column}"
-    if group_by:
-        title += f"  by  {group_by}"
-    ax.set_title(title, fontsize=13, fontweight="bold", pad=12)
-    ax.set_xlabel(group_by or "", fontsize=11)
-    ax.set_ylabel(column, fontsize=11)
-    fig.patch.set_facecolor(_BG)
-    plt.tight_layout()
-    plt.show()

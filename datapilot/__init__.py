@@ -1,4 +1,4 @@
-__version__ = "0.4.0"
+__version__ = "0.4.2"
 
 # ── Session Configuration ──────────────────────────────────────────────────────
 
@@ -143,12 +143,12 @@ def heatmap(df):
 
 def scatter(df, x, y, hue=None, trendline=True):
     """Scatter plot with optional OLS regression trendline and dark theme."""
-    from .visualization.heatmap import scatter as _scatter
+    from .visualization.scatter import scatter as _scatter
     return _scatter(df, x, y, hue=hue, trendline=trendline)
 
 def violin(df, column, group_by=None):
     """Violin plot combining box plot + KDE for richer distribution insight."""
-    from .visualization.heatmap import violin as _violin
+    from .visualization.violin import violin as _violin
     return _violin(df, column, group_by=group_by)
 
 def visualize_ai(df, prompt, ai_provider=None, ai_model=None, api_key=None):

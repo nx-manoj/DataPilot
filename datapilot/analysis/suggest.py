@@ -174,6 +174,8 @@ def suggest(
             print(f"\n\ud83e\udd16 AI Recommendations  [{provider_name.upper()}]:")
             print(ai_response)
         except Exception as e:
-            print(f"\n\u26a0\ufe0f  AI error: {e}")
+            import logging
+            logging.error(f"AI error: {e}", exc_info=True)
+            print(f"\n⚠️  AI error: {e}")
 
     return suggestions

@@ -179,6 +179,8 @@ def ask_ai(
         print(msg)
         return msg
     except Exception as e:
+        import logging
+        logging.error(f"AI error: {e}", exc_info=True)
         msg = f"⚠️  AI error: {e}"
         print(msg)
         return msg

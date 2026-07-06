@@ -44,7 +44,7 @@ def hist(
     bins: Union[int, str] = "auto",
     hue: Optional[str] = None,
     color: str = _ACCENT,
-) -> None:
+) -> plt.Axes:
     """Plots a styled distribution histogram with a smooth KDE overlay.
 
     Args:
@@ -98,4 +98,4 @@ def hist(
              color="#94a3b8", transform=fig.transFigure)
     fig.patch.set_facecolor(_BG)
     plt.tight_layout(rect=[0, 0, 1, 0.95])
-    plt.show()
+    return ax

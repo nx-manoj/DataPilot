@@ -43,4 +43,6 @@ def generate_insights(
     except ValueError as e:
         return f"⚠️  Configuration error: {e}"
     except Exception as e:
+        import logging
+        logging.error(f"AI error: {e}", exc_info=True)
         return f"⚠️  Could not generate AI Insights. Error: {e}"

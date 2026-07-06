@@ -40,7 +40,7 @@ def box(
     column: str,
     group_by: Optional[str] = None,
     orient: str = "v",
-) -> None:
+) -> plt.Axes:
     """Plots a styled box plot with quartile annotations and outlier highlights.
 
     Args:
@@ -66,8 +66,8 @@ def box(
 
     sns.boxplot(
         data=pdf,
-        x=x_kw if group_by else None,
-        y=y_kw if group_by else column,
+        x=x_kw if group_by else (None if orient == "v" else column),
+        y=y_kw if group_by else (column if orient == "v" else None),
         hue=group_by if group_by else None,
         palette="mako" if group_by else None,
         color=_ACCENT if not group_by else None,
@@ -105,4 +105,4 @@ def box(
              color="#94a3b8", transform=fig.transFigure)
     fig.patch.set_facecolor(_BG)
     plt.tight_layout(rect=[0, 0, 1, 0.95])
-    plt.show()
+    return ax

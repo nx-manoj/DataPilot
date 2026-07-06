@@ -105,8 +105,12 @@ def _ask_ai_for_chart_decision(
     except Exception as e:
         return {"error": str(e)}
 
+    # Strip markdown fences if present
+    raw_clean = re.sub(r"^```(?:json)?\s*", "", raw.strip(), flags=re.MULTILINE)
+    raw_clean = re.sub(r"```\s*$", "", raw_clean.strip(), flags=re.MULTILINE)
+
     # Extract JSON from the response (tolerates extra text)
-    match = re.search(r"\{.*\}", raw, re.DOTALL)
+    match = re.search(r"\{.*\}", raw_clean, re.DOTALL)
     if not match:
         return {"error": f"AI returned non-JSON: {raw}"}
     try:
@@ -117,7 +121,7 @@ def _ask_ai_for_chart_decision(
 
 # ── Chart renderer ────────────────────────────────────────────────────────────
 
-def _render_chart(pdf: pd.DataFrame, decision: dict) -> None:
+def _render_chart(pdf: pd.DataFrame, decision: dict) -> plt.Axes:
     """Render the chart described by the AI decision dict."""
     chart_type = decision.get("chart_type", "").lower()
     x     = decision.get("x")
@@ -219,11 +223,14 @@ def _render_chart(pdf: pd.DataFrame, decision: dict) -> None:
         if y: ax.set_ylabel(y, fontsize=10)
         fig.patch.set_facecolor(_BG_COLOR)
         plt.tight_layout()
-        plt.show()
+        return ax
 
     except Exception as e:
+        import logging
         plt.close()
+        logging.error(f"Chart rendering error: {e}", exc_info=True)
         print(f"⚠️  Chart rendering error: {e}")
+        return None
 
 
 # ── Public API ────────────────────────────────────────────────────────────────
@@ -234,7 +241,7 @@ def visualize_ai(
     ai_provider: Optional[str] = None,
     ai_model: Optional[str] = None,
     api_key: Optional[str] = None,
-) -> None:
+) -> Optional[plt.Axes]:
     """Ask the AI to choose and draw the right chart from a plain-English prompt.
 
     DataPilot sends only the column names and their data types to the AI —
@@ -294,4 +301,4 @@ def visualize_ai(
     if hue_col: print(f"      hue → {hue_col}")
     print()
 
-    _render_chart(pdf, decision)
+    return _render_chart(pdf, decision)
