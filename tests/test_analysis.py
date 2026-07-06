@@ -109,7 +109,7 @@ def test_dashboard(tmp_path):
     
     # Assert
     assert report_file.exists()
-    content = report_file.read_text()
+    content = report_file.read_text(encoding="utf-8")
     assert "DataPilot Dataset Report" in content
     assert "Total Rows" in content
     assert "Total Columns" in content
@@ -121,7 +121,7 @@ def test_dashboard(tmp_path):
 def test_version():
     assert hasattr(dp, "__version__")
     assert isinstance(dp.__version__, str)
-    assert dp.__version__ == "0.3.0"
+    assert dp.__version__ == "0.4.0"
 
 
 
