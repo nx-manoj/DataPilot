@@ -121,7 +121,7 @@ def test_dashboard(tmp_path):
 def test_version():
     assert hasattr(dp, "__version__")
     assert isinstance(dp.__version__, str)
-    assert dp.__version__ == "0.4.3"
+    assert dp.__version__ == "0.5.0"
 
 
 

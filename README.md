@@ -44,8 +44,9 @@ DataPilot is an open-source Python library that automates Exploratory Data Analy
 11. [Module 9: Visualization Engine](#module-9-visualization-engine)
 12. [Module 10: Machine Learning Diagnostics](#module-10-machine-learning-diagnostics)
 13. [Module 11: Standalone HTML Dashboard](#module-11-standalone-html-dashboard)
-14. [Module 12: Performance Benchmark](#module-12-performance-benchmark)
-15. [Module 13: AI Copilot Providers](#module-13-ai-copilot-providers)
+13. [Module 12: Performance Benchmark](#module-12-performance-benchmark)
+14. [Module 13: DataPilot Web Studio](#module-13-datapilot-web-studio)
+15. [Module 14: AI Copilot Providers](#module-14-ai-copilot-providers)
 16. [Troubleshooting](#troubleshooting)
 
 ---
@@ -65,6 +66,7 @@ pip install "datapilot-polars[openai]"    # OpenAI support
 pip install "datapilot-polars[gemini]"    # Google Gemini support
 pip install "datapilot-polars[claude]"    # Anthropic Claude support
 pip install "datapilot-polars[groq]"      # Groq support (free tier)
+pip install "datapilot-polars[studio]"    # DataPilot Web Studio UI
 pip install "datapilot-polars[all-ai]"    # All cloud AI providers at once
 ```
 
@@ -112,6 +114,9 @@ clean_df, log = dp.auto_clean(df, use_ai=True)
 
 # 7. Export a full offline HTML report
 dp.dashboard(df, "report.html")
+
+# 8. Launch the interactive DataPilot Web Studio in your browser
+dp.launch_studio()
 ```
 
 ---
@@ -292,7 +297,17 @@ Benchmarks DataPilot (Polars core) operations against equivalent Pandas operatio
 
 ---
 
-## Module 13: AI Copilot Providers
+## Module 13: DataPilot Web Studio
+
+### `dp.launch_studio(port=8501)`
+Launches a completely interactive, no-code local Streamlit application in your web browser. 
+Users can drag-and-drop CSV files, view the glassmorphic dashboard in real-time, and chat with their data natively.
+
+*Requires the `studio` extra: `pip install datapilot-polars[studio]`*
+
+---
+
+## Module 14: AI Copilot Providers
 
 DataPilot uses a **Metadata-Only AI Pattern** — raw data rows are **never** transmitted. Only statistical summaries are sent.
 
