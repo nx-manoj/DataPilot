@@ -1,0 +1,75 @@
+site_name: DataPilot
+site_description: Your Data Science Copilot — Polars-native EDA, auto-cleaning, drift detection, and multi-provider AI insights.
+site_author: Manoj
+repo_url: https://github.com/nx-manoj/DataPilot
+repo_name: nx-manoj/DataPilot
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [.]
+          options:
+            show_source: true
+            show_root_heading: true
+            heading_level: 2
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: index.md#installation
+      - Quick Start: index.md#quick-start
+  - Modules:
+      - Profiling: index.md#module-1-fast-statistical-summary
+      - Visualization: index.md#module-9-visualization-engine
+      - Machine Learning: index.md#module-10-machine-learning-diagnostics
+      - DataPilot Web Studio: index.md#module-13-datapilot-web-studio
+  - API Reference: api.md
