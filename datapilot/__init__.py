@@ -194,6 +194,11 @@ def dashboard(df, output_path="datapilot_report.html"):
     from .dashboard.dashboard import dashboard as _dashboard
     return _dashboard(df, output_path)
 
+def launch_studio():
+    """Launches the DataPilot Studio interface."""
+    from .studio import launch_studio as _launch
+    return _launch()
+
 
 __all__ = [
     "__version__",
@@ -209,5 +214,5 @@ __all__ = [
     # ML
     "classification_report", "regression_report", "diagnose",
     # Dashboard
-    "dashboard",
+    "dashboard", "launch_studio",
 ]

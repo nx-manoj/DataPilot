@@ -39,6 +39,7 @@ all-ai = [
     "anthropic>=0.25.0",
     "groq>=0.9.0",
 ]
+studio = ["streamlit>=1.30.0"]
 
 [tool.setuptools.packages.find]
 where = ["."]
