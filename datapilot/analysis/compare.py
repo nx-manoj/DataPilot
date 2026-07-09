@@ -100,11 +100,11 @@ def compare(
         else:
             # ── Categorical drift: JS divergence ──────────────────────────────
             tr_counts = dict(zip(
-                train_df[col].value_counts()["value"].cast(pl.Utf8).to_list(),
+                train_df[col].value_counts()[col].cast(pl.Utf8).to_list(),
                 train_df[col].value_counts()["count"].to_list(),
             ))
             te_counts = dict(zip(
-                test_df[col].value_counts()["value"].cast(pl.Utf8).to_list(),
+                test_df[col].value_counts()[col].cast(pl.Utf8).to_list(),
                 test_df[col].value_counts()["count"].to_list(),
             ))
 
@@ -165,9 +165,9 @@ def compare(
                 api_key=key,
             )
             ai_response = provider._call_with_raw_prompts(system_prompt, user_prompt)
-            print(f"\n\ud83e\udd16 AI Drift Mitigations  [{provider_name.upper()}]:")
+            print(f"\n🤖 AI Drift Mitigations  [{provider_name.upper()}]:")
             print(ai_response)
         except Exception as e:
-            print(f"\n\u26a0\ufe0f  AI error: {e}")
+            print(f"\n⚠️  AI error: {e}")
 
     return drift_flags

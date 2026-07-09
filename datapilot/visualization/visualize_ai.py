@@ -3,7 +3,7 @@ datapilot.visualization.visualize_ai — dp.visualize_ai()
 
 Natural-language driven visualization.  The user writes a plain-English
 prompt; the AI decides which chart type to generate and which columns to
-use, then DataPilot builds and shows the chart via Seaborn/Matplotlib.
+use, then DataPilot builds and shows the chart via Plotly.
 
 The AI returns a compact JSON decision block (chart_type, x, y, hue,
 title) which is then executed locally — no plotting code is ever run by
@@ -23,43 +23,14 @@ import json
 import re
 from typing import Union, Optional
 
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import seaborn as sns
 import numpy as np
 import polars as pl
 import pandas as pd
+import plotly.express as px
 
 from ..utils.validation import ensure_polars
 from ..config import get_config
 from ..ai.factory import get_provider
-
-
-# ── Seaborn theme applied once ────────────────────────────────────────────────
-_PALETTE   = "mako"
-_BG_COLOR  = "#0f172a"
-_GRID_COLOR = "#1e293b"
-_TEXT_COLOR = "#e2e8f0"
-_ACCENT    = "#3b82f6"
-
-
-def _apply_dp_theme() -> None:
-    """Apply the DataPilot dark seaborn theme."""
-    sns.set_theme(style="darkgrid", palette=_PALETTE)
-    mpl.rcParams.update({
-        "figure.facecolor":  _BG_COLOR,
-        "axes.facecolor":    _BG_COLOR,
-        "axes.edgecolor":    _GRID_COLOR,
-        "axes.labelcolor":   _TEXT_COLOR,
-        "axes.titlecolor":   _TEXT_COLOR,
-        "xtick.color":       _TEXT_COLOR,
-        "ytick.color":       _TEXT_COLOR,
-        "grid.color":        _GRID_COLOR,
-        "text.color":        _TEXT_COLOR,
-        "legend.facecolor":  "#1e293b",
-        "legend.edgecolor":  _GRID_COLOR,
-        "figure.dpi":        120,
-    })
 
 
 # ── AI decision parsing ───────────────────────────────────────────────────────
@@ -121,8 +92,10 @@ def _ask_ai_for_chart_decision(
 
 # ── Chart renderer ────────────────────────────────────────────────────────────
 
-def _render_chart(pdf: pd.DataFrame, decision: dict) -> plt.Axes:
-    """Render the chart described by the AI decision dict."""
+def _render_chart(pdf: pd.DataFrame, decision: dict):
+    """Render the chart described by the AI decision dict using Plotly."""
+    import plotly.graph_objects as go
+    
     chart_type = decision.get("chart_type", "").lower()
     x     = decision.get("x")
     y     = decision.get("y")
@@ -133,32 +106,22 @@ def _render_chart(pdf: pd.DataFrame, decision: dict) -> plt.Axes:
     for col_ref in [x, y, hue]:
         if col_ref and col_ref not in pdf.columns:
             print(f"⚠️  Column '{col_ref}' not found — skipping chart.")
-            return
-
-    _apply_dp_theme()
-    fig, ax = plt.subplots(figsize=(10, 6))
+            return None
 
     try:
+        fig = None
         if chart_type == "histogram":
             col = x or y
-            sns.histplot(data=pdf, x=col, hue=hue, kde=True,
-                         palette=_PALETTE, ax=ax, bins="auto",
-                         edgecolor="none", alpha=0.8)
+            fig = px.histogram(pdf, x=col, color=hue, barmode="overlay", marginal="violin")
 
         elif chart_type == "boxplot":
-            sns.boxplot(data=pdf, x=x, y=y, hue=hue,
-                        palette=_PALETTE, ax=ax,
-                        linewidth=1.2, flierprops={"marker": "o", "markersize": 3})
+            fig = px.box(pdf, x=x, y=y, color=hue)
 
         elif chart_type == "violin":
-            sns.violinplot(data=pdf, x=x, y=y, hue=hue,
-                           palette=_PALETTE, ax=ax, inner="quartile",
-                           linewidth=0.8)
+            fig = px.violin(pdf, x=x, y=y, color=hue, box=True, points="all")
 
         elif chart_type == "scatter":
-            sns.scatterplot(data=pdf, x=x, y=y, hue=hue,
-                            palette=_PALETTE, ax=ax,
-                            alpha=0.75, s=40, linewidth=0)
+            fig = px.scatter(pdf, x=x, y=y, color=hue, opacity=0.75)
             # Add a regression line if hue is not set
             if not hue and x and y:
                 _x = pdf[x].dropna()
@@ -168,66 +131,63 @@ def _render_chart(pdf: pd.DataFrame, decision: dict) -> plt.Axes:
                     z = np.polyfit(_x[common_idx], _y[common_idx], 1)
                     p = np.poly1d(z)
                     x_line = np.linspace(_x.min(), _x.max(), 200)
-                    ax.plot(x_line, p(x_line), color="#f43f5e",
-                            linewidth=1.8, linestyle="--", label="trend")
-                    ax.legend()
+                    fig.add_trace(go.Scatter(
+                        x=x_line, y=p(x_line),
+                        mode='lines',
+                        line=dict(color="#f43f5e", width=2, dash='dash'),
+                        name="trend"
+                    ))
 
         elif chart_type == "bar":
-            sns.barplot(data=pdf, x=x, y=y, hue=hue,
-                        palette=_PALETTE, ax=ax,
-                        errorbar=None, edgecolor="none")
+            fig = px.bar(pdf, x=x, y=y, color=hue)
 
         elif chart_type == "countplot":
             col = x or y
-            sns.countplot(data=pdf, x=col, hue=hue,
-                          palette=_PALETTE, ax=ax, edgecolor="none")
+            fig = px.histogram(pdf, x=col, color=hue, barmode="group")
 
         elif chart_type == "line":
-            sns.lineplot(data=pdf, x=x, y=y, hue=hue,
-                         palette=_PALETTE, ax=ax, linewidth=2)
+            fig = px.line(pdf, x=x, y=y, color=hue)
 
         elif chart_type == "heatmap":
             numeric_cols = pdf.select_dtypes(include="number").columns.tolist()
             if len(numeric_cols) < 2:
                 print("⚠️  Not enough numeric columns for a heatmap.")
-                plt.close()
-                return
+                return None
             corr = pdf[numeric_cols].corr()
-            mask = np.triu(np.ones_like(corr, dtype=bool))
-            sns.heatmap(corr, ax=ax, mask=mask, annot=True, fmt=".2f",
-                        cmap="coolwarm", vmin=-1, vmax=1,
-                        linewidths=0.4, cbar_kws={"shrink": 0.8})
+            fig = px.imshow(
+                corr, text_auto=".2f",
+                color_continuous_scale="RdBu_r",
+                zmin=-1, zmax=1, aspect="auto"
+            )
 
         elif chart_type == "pairplot":
-            plt.close()  # pairplot creates its own figure
-            g = sns.pairplot(
-                pdf.select_dtypes(include="number").dropna().head(500),
-                diag_kind="kde", plot_kws={"alpha": 0.5},
-                palette=_PALETTE,
+            numeric_cols = pdf.select_dtypes(include="number").columns.tolist()
+            if not numeric_cols:
+                return None
+            
+            pdf_sample = pdf.dropna(subset=numeric_cols).head(500)
+            
+            fig = px.scatter_matrix(
+                pdf_sample,
+                dimensions=numeric_cols,
+                color=hue
             )
-            g.figure.patch.set_facecolor(_BG_COLOR)
-            g.figure.suptitle(title, y=1.02,
-                               color=_TEXT_COLOR, fontsize=13, fontweight="bold")
-            plt.tight_layout()
-            plt.show()
-            return
+            fig.update_traces(diagonal_visible=False)
 
         else:
             print(f"⚠️  Unknown chart type returned by AI: '{chart_type}'")
-            plt.close()
-            return
-
-        ax.set_title(title, fontsize=13, fontweight="bold",
-                     color=_TEXT_COLOR, pad=14)
-        if x: ax.set_xlabel(x, fontsize=10)
-        if y: ax.set_ylabel(y, fontsize=10)
-        fig.patch.set_facecolor(_BG_COLOR)
-        plt.tight_layout()
-        return ax
+            return None
+            
+        fig.update_layout(
+            template="plotly_dark",
+            title=title,
+            title_x=0.5,
+            margin=dict(t=50, l=20, r=20, b=20)
+        )
+        return fig
 
     except Exception as e:
         import logging
-        plt.close()
         logging.error(f"Chart rendering error: {e}", exc_info=True)
         print(f"⚠️  Chart rendering error: {e}")
         return None
@@ -241,12 +201,12 @@ def visualize_ai(
     ai_provider: Optional[str] = None,
     ai_model: Optional[str] = None,
     api_key: Optional[str] = None,
-) -> Optional[plt.Axes]:
+):
     """Ask the AI to choose and draw the right chart from a plain-English prompt.
 
     DataPilot sends only the column names and their data types to the AI —
     no raw values are ever transmitted.  The AI decides the chart type and
-    columns; the rendering is done 100% locally.
+    columns; the rendering is done 100% locally using Plotly.
 
     Args:
         df:          Input DataFrame (Pandas or Polars).
@@ -255,6 +215,9 @@ def visualize_ai(
         ai_model:    Override the globally configured model for this call.
         api_key:     Override the globally configured API key for this call.
 
+    Returns:
+        Interactive Plotly Figure or None.
+        
     Example
     -------
         dp.configure(ai_provider="groq", api_key="gsk_...")
@@ -288,7 +251,7 @@ def visualize_ai(
 
     if "error" in decision:
         print(f"⚠️  Could not determine chart type: {decision['error']}")
-        return
+        return None
 
     chart_type = decision.get("chart_type", "unknown")
     x_col = decision.get("x") or ""
@@ -301,4 +264,7 @@ def visualize_ai(
     if hue_col: print(f"      hue → {hue_col}")
     print()
 
-    return _render_chart(pdf, decision)
+    fig = _render_chart(pdf, decision)
+    if fig:
+        fig.show()
+    return fig

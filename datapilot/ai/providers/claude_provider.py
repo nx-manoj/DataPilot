@@ -43,3 +43,20 @@ class ClaudeProvider(BaseAIProvider):
             return response.content[0].text.strip()
         except Exception as e:
             return f"⚠️  Anthropic Claude API error: {e}"
+
+    def _call_with_raw_prompts(self, system_prompt: str, user_prompt: str) -> str:
+        try:
+            import anthropic
+        except ImportError:
+            return "⚠️  Anthropic package not installed. Run: pip install anthropic"
+        try:
+            client = anthropic.Anthropic(api_key=self.api_key)
+            response = client.messages.create(
+                model=self.model,
+                max_tokens=500,
+                system=system_prompt,
+                messages=[{"role": "user", "content": user_prompt}],
+            )
+            return response.content[0].text.strip()
+        except Exception as e:
+            return f"⚠️  Anthropic Claude API error: {e}"

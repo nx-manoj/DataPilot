@@ -10,22 +10,10 @@ import pandas as pd
 import base64
 import io
 
-def _fig_to_base64(fig) -> str:
-    """Convert a matplotlib figure to a base64-encoded PNG string."""
-    buf = io.BytesIO()
-    fig.savefig(buf, format="png", bbox_inches="tight", dpi=120)
-    buf.seek(0)
-    encoded = base64.b64encode(buf.read()).decode("utf-8")
-    buf.close()
-    return encoded
-
-def _build_correlation_heatmap_b64(local_df: pl.DataFrame) -> str:
-    """Renders a correlation heatmap and returns it as a base64 PNG string."""
+def _build_correlation_heatmap_html(local_df: pl.DataFrame) -> str:
+    """Renders a correlation heatmap and returns it as an interactive Plotly HTML string."""
     try:
-        import matplotlib
-        matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
-        import seaborn as sns
+        import plotly.express as px
 
         numeric_cols = [
             col for col, dtype in zip(local_df.columns, local_df.dtypes)
@@ -34,45 +22,46 @@ def _build_correlation_heatmap_b64(local_df: pl.DataFrame) -> str:
         if len(numeric_cols) < 2:
             return ""
 
-        corr_matrix = local_df.select(numeric_cols).corr().to_pandas()
+        corr_matrix = local_df.select(numeric_cols).to_pandas().corr()
         corr_matrix.index = numeric_cols
 
-        fig, ax = plt.subplots(figsize=(max(5, len(numeric_cols)), max(4, len(numeric_cols) - 1)))
-        sns.heatmap(
-            corr_matrix, annot=True, cmap="coolwarm",
-            fmt=".2f", vmin=-1, vmax=1, linewidths=0.5, ax=ax
+        fig = px.imshow(
+            corr_matrix, 
+            text_auto=".2f", 
+            color_continuous_scale="RdBu_r", 
+            zmin=-1, zmax=1,
+            aspect="auto",
+            title="Pearson Correlation Matrix"
         )
-        ax.set_title("Pearson Correlation Matrix", fontsize=13, fontweight="bold", pad=12)
-        fig.tight_layout()
-        b64 = _fig_to_base64(fig)
-        plt.close(fig)
-        return b64
+        fig.update_layout(margin=dict(t=40, l=10, r=10, b=10), title_x=0.5)
+        return fig.to_html(full_html=False, include_plotlyjs='cdn')
     except Exception:
         return ""
 
-def _build_missing_bar_b64(miss_list: list) -> str:
-    """Renders a horizontal bar chart of missing value percentages as base64 PNG."""
+def _build_missing_bar_html(miss_list: list) -> str:
+    """Renders a horizontal bar chart of missing value percentages as interactive Plotly HTML."""
     if not miss_list:
         return ""
     try:
-        import matplotlib
-        matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
+        import plotly.express as px
 
         cols = [r["column"] for r in miss_list]
         pcts = [r["missing_percentage"] for r in miss_list]
 
-        fig, ax = plt.subplots(figsize=(7, max(2, len(cols) * 0.55 + 1)))
-        bars = ax.barh(cols[::-1], pcts[::-1], color="#4A90E2", height=0.55)
-        ax.bar_label(bars, fmt="%.1f%%", padding=4, fontsize=9)
-        ax.set_xlabel("Missing (%)", fontsize=10)
-        ax.set_xlim(0, 105)
-        ax.set_title("Missing Value Distribution", fontsize=13, fontweight="bold")
-        ax.spines[["top", "right"]].set_visible(False)
-        fig.tight_layout()
-        b64 = _fig_to_base64(fig)
-        plt.close(fig)
-        return b64
+        fig = px.bar(
+            x=pcts, y=cols, orientation='h',
+            text=[f"{p:.1f}%" for p in pcts],
+            title="Missing Value Distribution",
+            labels={"x": "Missing (%)", "y": "Column"},
+            color_discrete_sequence=["#4A90E2"]
+        )
+        fig.update_layout(
+            xaxis=dict(range=[0, 100]), 
+            yaxis=dict(autorange="reversed"),
+            margin=dict(t=40, l=10, r=10, b=10),
+            title_x=0.5
+        )
+        return fig.to_html(full_html=False, include_plotlyjs='cdn')
     except Exception:
         return ""
 
@@ -101,8 +90,8 @@ def dashboard(df: Union[pd.DataFrame, pl.DataFrame], output_path: str = "datapil
     miss_list = miss_df.to_dict(orient="records") if isinstance(miss_df, pd.DataFrame) else miss_df.to_dicts()
 
     # ── Inline chart images ──────────────────────────────────────────────────
-    heatmap_b64 = _build_correlation_heatmap_b64(local_df)
-    missing_bar_b64 = _build_missing_bar_b64(miss_list)
+    heatmap_html = _build_correlation_heatmap_html(local_df)
+    missing_bar_html = _build_missing_bar_html(miss_list)
 
     # ── Missing value rows ───────────────────────────────────────────────────
     if not miss_list:
@@ -140,13 +129,13 @@ def dashboard(df: Union[pd.DataFrame, pl.DataFrame], output_path: str = "datapil
 
     heatmap_section = (
         f"<div class='section'><h2>📊 Correlation Heatmap</h2>"
-        f"<img src='data:image/png;base64,{heatmap_b64}' style='max-width:100%;border-radius:8px;' alt='Correlation Heatmap'/></div>"
-    ) if heatmap_b64 else ""
+        f"<div style='margin-top: 15px;'>{heatmap_html}</div></div>"
+    ) if heatmap_html else ""
 
     missing_bar_section = (
-        f"<img src='data:image/png;base64,{missing_bar_b64}' "
-        f"style='max-width:100%;margin-top:18px;border-radius:8px;' alt='Missing Values Chart'/>"
-    ) if missing_bar_b64 else ""
+        f"<div style='margin-top: 18px; border-radius: 8px; overflow: hidden;'>"
+        f"{missing_bar_html}</div>"
+    ) if missing_bar_html else ""
 
     # ── HTML ─────────────────────────────────────────────────────────────────
     html_content = f"""<!DOCTYPE html>

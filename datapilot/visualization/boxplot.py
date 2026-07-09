@@ -1,53 +1,30 @@
 from __future__ import annotations
 
 from typing import Union, Optional
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import seaborn as sns
 import numpy as np
 import polars as pl
 import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 
 from ..utils.validation import ensure_polars
-
-_BG     = "#0f172a"
-_BG_AX  = "#1e293b"
-_GRID   = "#334155"
-_TEXT   = "#e2e8f0"
-_ACCENT = "#8b5cf6"
-
-
-def _apply_theme() -> None:
-    sns.set_theme(style="darkgrid")
-    mpl.rcParams.update({
-        "figure.facecolor": _BG,
-        "axes.facecolor":   _BG_AX,
-        "axes.edgecolor":   _GRID,
-        "axes.labelcolor":  _TEXT,
-        "axes.titlecolor":  _TEXT,
-        "xtick.color":      _TEXT,
-        "ytick.color":      _TEXT,
-        "grid.color":       _GRID,
-        "text.color":       _TEXT,
-        "legend.facecolor": _BG_AX,
-        "legend.edgecolor": _GRID,
-        "figure.dpi":       120,
-    })
-
 
 def box(
     df: Union[pd.DataFrame, pl.DataFrame],
     column: str,
     group_by: Optional[str] = None,
     orient: str = "v",
-) -> plt.Axes:
-    """Plots a styled box plot with quartile annotations and outlier highlights.
+):
+    """Plots a styled box plot with quartile annotations and outlier highlights using Plotly.
 
     Args:
         df:       Input DataFrame (Pandas or Polars).
         column:   Target numeric column name.
         group_by: Optional categorical column to split boxes by group.
         orient:   Orientation — 'v' (vertical, default) or 'h' (horizontal).
+        
+    Returns:
+        Interactive Plotly Figure.
     """
     local_df, _ = ensure_polars(df)
 
@@ -57,36 +34,25 @@ def box(
         raise ValueError(f"group_by column '{group_by}' not found in the dataset.")
 
     pdf = local_df.to_pandas()
-    _apply_theme()
-
-    fig, ax = plt.subplots(figsize=(10, 6))
+    series = pdf[column].dropna()
 
     x_kw = group_by if orient == "v" else column
     y_kw = column   if orient == "v" else group_by
 
-    sns.boxplot(
-        data=pdf,
-        x=x_kw if group_by else (None if orient == "v" else column),
-        y=y_kw if group_by else (column if orient == "v" else None),
-        hue=group_by if group_by else None,
-        palette="mako" if group_by else None,
-        color=_ACCENT if not group_by else None,
-        ax=ax,
-        linewidth=1.4,
-        flierprops={
-            "marker": "o",
-            "markerfacecolor": "#f43f5e",
-            "markersize": 4,
-            "alpha": 0.7,
-            "markeredgewidth": 0,
-        },
-        medianprops={"color": "#10b981", "linewidth": 2.2},
-        whiskerprops={"color": _TEXT, "linewidth": 1.2},
-        capprops={"color": _TEXT, "linewidth": 1.5},
-    )
-
-    # Annotate IQR stats in the subtitle
-    series = pdf[column].dropna()
+    if group_by:
+        fig = px.box(
+            pdf, x=x_kw, y=y_kw, color=group_by,
+            orientation=orient,
+            title=f"Box Plot of {column} grouped by {group_by}"
+        )
+    else:
+        fig = px.box(
+            pdf, x=x_kw if orient == "h" else None, y=y_kw if orient == "v" else None,
+            orientation=orient, color_discrete_sequence=["#8b5cf6"],
+            title=f"Box Plot of {column}"
+        )
+    
+    # Calculate stats for subtitle
     q1, med, q3 = np.percentile(series, [25, 50, 75])
     iqr = q3 - q1
     subtitle = (
@@ -94,15 +60,21 @@ def box(
         f"IQR={iqr:.2f} | n={len(series):,}"
     )
 
-    title = f"Box Plot of  {column}"
-    if group_by:
-        title += f"  grouped by  {group_by}"
+    fig.update_layout(
+        template="plotly_dark",
+        title_x=0.5,
+        xaxis_title=x_kw or "",
+        yaxis_title=y_kw or column,
+        margin=dict(t=50, l=20, r=20, b=50)
+    )
+    
+    # Add subtitle using annotation
+    fig.add_annotation(
+        text=subtitle,
+        xref="paper", yref="paper",
+        x=0.5, y=1.05,
+        showarrow=False,
+        font=dict(size=11, color="#94a3b8")
+    )
 
-    ax.set_title(title, fontsize=13, fontweight="bold", pad=12)
-    ax.set_xlabel(x_kw or "", fontsize=11)
-    ax.set_ylabel(y_kw or column, fontsize=11)
-    fig.text(0.5, 0.96, subtitle, ha="center", fontsize=8.5,
-             color="#94a3b8", transform=fig.transFigure)
-    fig.patch.set_facecolor(_BG)
-    plt.tight_layout(rect=[0, 0, 1, 0.95])
-    return ax
+    return fig

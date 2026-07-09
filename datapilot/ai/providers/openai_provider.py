@@ -41,3 +41,23 @@ class OpenAIProvider(BaseAIProvider):
             return response.choices[0].message.content.strip()
         except Exception as e:
             return f"⚠️  OpenAI API error: {e}"
+
+    def _call_with_raw_prompts(self, system_prompt: str, user_prompt: str) -> str:
+        try:
+            from openai import OpenAI
+        except ImportError:
+            return "⚠️  OpenAI package not installed. Run: pip install openai"
+        try:
+            client = OpenAI(api_key=self.api_key)
+            response = client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user",   "content": user_prompt},
+                ],
+                max_tokens=500,
+                temperature=0.4,
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            return f"⚠️  OpenAI API error: {e}"

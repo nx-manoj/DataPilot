@@ -91,7 +91,35 @@ def correlation(
     )
 
     # Return in the same engine the user passed in
-    final_matrix = corr_polars.to_pandas() if original_engine == "pandas" else corr_polars
+    if original_engine == "pandas":
+        final_matrix = corr_polars.to_pandas()
+        # Set the row index to column names so the matrix is fully labelled
+        final_matrix.index = numeric_cols
+    else:
+        # For Polars, add a leading "column" column for row labels
+        final_matrix = corr_polars.with_columns(
+            pl.Series("column", numeric_cols)
+        ).select(["column"] + numeric_cols)
+
+    # ── Print a brief summary ───────────────────────────────────────────────
+    print("=" * 56)
+    print("        DATAPILOT CORRELATION ANALYSIS              ")
+    print("=" * 56)
+    print(f"  Threshold: |r| >= {threshold}  |  Numeric columns: {n_cols}")
+    print("-" * 56)
+    if strong_pos:
+        print("\n  ✅ Strong POSITIVE correlations:")
+        for pair, val in strong_pos:
+            print(f"     • {pair}  →  r = {val}")
+    else:
+        print("\n  ℹ️  No strong positive correlations found.")
+    if strong_neg:
+        print("\n  ❌ Strong NEGATIVE correlations:")
+        for pair, val in strong_neg:
+            print(f"     • {pair}  →  r = {val}")
+    else:
+        print("\n  ℹ️  No strong negative correlations found.")
+    print("=" * 56)
 
     return {
         "matrix": final_matrix,

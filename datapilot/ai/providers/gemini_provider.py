@@ -44,3 +44,25 @@ class GeminiProvider(BaseAIProvider):
             return response.text.strip()
         except Exception as e:
             return f"⚠️  Google Gemini API error: {e}"
+
+    def _call_with_raw_prompts(self, system_prompt: str, user_prompt: str) -> str:
+        try:
+            import google.generativeai as genai
+        except ImportError:
+            return "⚠️  Google Generative AI package not installed. Run: pip install google-generativeai"
+        try:
+            genai.configure(api_key=self.api_key)
+            model = genai.GenerativeModel(
+                model_name=self.model,
+                system_instruction=system_prompt,
+            )
+            response = model.generate_content(
+                user_prompt,
+                generation_config=genai.GenerationConfig(
+                    max_output_tokens=500,
+                    temperature=0.4,
+                ),
+            )
+            return response.text.strip()
+        except Exception as e:
+            return f"⚠️  Google Gemini API error: {e}"

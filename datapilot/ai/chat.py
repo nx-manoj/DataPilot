@@ -79,14 +79,13 @@ def _build_metadata_snapshot(local_df: pl.DataFrame) -> str:
     corr_parts: List[str] = []
     if len(numeric_cols) >= 2:
         try:
-            corr_matrix = local_df.select(numeric_cols).corr()
-            cols_list   = corr_matrix.columns
+            corr_matrix = local_df.select(numeric_cols).to_pandas().corr()
+            cols_list   = corr_matrix.columns.tolist()
             for i in range(len(cols_list)):
                 for j in range(i + 1, len(cols_list)):
-                    val = corr_matrix[i, j]
-                    if val is not None and not (isinstance(val, float) and math.isnan(val)):
-                        if abs(val) >= 0.5:
-                            corr_parts.append(f"{cols_list[i]} ↔ {cols_list[j]}: r={round(val, 3)}")
+                    val = corr_matrix.iloc[i, j]
+                    if pd.notna(val) and abs(val) >= 0.5:
+                        corr_parts.append(f"{cols_list[i]} ↔ {cols_list[j]}: r={round(val, 3)}")
         except Exception:
             pass
 

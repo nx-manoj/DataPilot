@@ -134,7 +134,7 @@ def outliers(
                 api_key=key,
             )
             ai_response = provider._call_with_raw_prompts(system_prompt, user_prompt)
-            print(f"\n\ud83e\udd16 AI Treatment Recommendations  [{provider_name.upper()}]:")
+            print(f"\n🤖 AI Treatment Recommendations  [{provider_name.upper()}]:")
             print(ai_response)
         except Exception as e:
             import logging
