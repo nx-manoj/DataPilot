@@ -1,7 +1,7 @@
 # 📖 DataPilot — Your Data Science Copilot
 
 [![Python Version](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
-[![Version](https://img.shields.io/badge/version-0.4.3-brightgreen.svg)](https://github.com/nx-manoj/DataPilot)
+[![Version](https://img.shields.io/badge/version-0.5.0-brightgreen.svg)](https://github.com/nx-manoj/DataPilot)
 [![Core Engine](https://img.shields.io/badge/Powered%20By-Polars%20%7C%20Apache%20Arrow-orange.svg)](https://pola.rs/)
 [![AI Providers](https://img.shields.io/badge/AI-Ollama%20%7C%20OpenAI%20%7C%20Gemini%20%7C%20Claude%20%7C%20Groq-purple.svg)](https://github.com/nx-manoj/DataPilot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -24,7 +24,7 @@ DataPilot is an open-source Python library that automates Exploratory Data Analy
 | Train/test drift detection | ✅ | ✅ | ❌ | ✅ |
 | Outlier detection | ⚠️ | ❌ | ✅ | ✅ |
 | Smart column suggestions | ❌ | ❌ | ❌ | ✅ |
-| Offline HTML dashboard | ✅ | ✅ | ❌ | ✅ |
+| Interactive Glassmorphic HTML dashboard | ✅ | ✅ | ❌ | ✅ |
 | Regression diagnostics | ❌ | ❌ | ❌ | ✅ |
 | ML model diagnostics | ❌ | ❌ | ❌ | ✅ |
 
@@ -232,25 +232,25 @@ dp.ask_ai(df, "Should I log-transform Fare or normalise Age first?")
 
 ## Module 9: Visualization Engine
 
-Includes publication-ready, dark-themed plots (`#0f172a` slate background) with automatic statistical overlays.
+Includes publication-ready, interactive Plotly charts with a dark theme (`plotly_dark`) and automatic statistical overlays.
 
 ### `dp.hist(df, column, bins="auto", hue=None, color="#3b82f6")`
-Histogram with automatic KDE overlay, plus mean and median lines.
+Interactive histogram with automatic KDE overlay, plus mean and median dashed lines.
 
 ### `dp.box(df, column, group_by=None, orient="v")`
-Box plot with median highlights and automatic IQR annotation.
+Interactive box plot with median highlights and automatic IQR annotation.
 
 ### `dp.heatmap(df)`
-Lower-triangle Pearson correlation matrix heatmap.
+Interactive Pearson correlation matrix heatmap with hover tooltips.
 
 ### `dp.scatter(df, x, y, hue=None, trendline=True)`
-Scatter plot with optional OLS regression trendline.
+Interactive scatter plot with optional OLS regression trendline.
 
 ### `dp.violin(df, column, group_by=None)`
-Violin plot combining box plot and KDE for rich distribution insights.
+Interactive violin plot combining box plot and KDE for rich distribution insights.
 
 ### `dp.visualize_ai(df, prompt, ai_provider=None, ai_model=None, api_key=None)`
-Ask the AI to choose and draw the right chart from a plain-English prompt.
+Ask the AI to choose and draw the right interactive chart from a plain-English prompt.
 ```python
 dp.visualize_ai(df, "Show the relation between Age and Survived")
 dp.visualize_ai(df, "Distribution of Fare for each passenger class")
@@ -275,7 +275,7 @@ Evaluates train/test performance gaps to diagnose overfitting or underfitting.
 ## Module 11: Standalone HTML Dashboard
 
 ### `dp.dashboard(df, output_path="datapilot_report.html")`
-Generates a complete, **offline-ready** HTML dashboard report containing metrics, datatype profiles, missing value charts, and correlation heatmap matrix.
+Generates a complete, **offline-ready** HTML dashboard report containing metrics, datatype profiles, missing value charts, and correlation heatmap matrix. Features a premium glassmorphic dark-mode UI with embedded interactive Plotly charts.
 
 ---
 

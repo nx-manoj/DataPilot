@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [0.5.0] - 2026-07-09
+
+### Added
+- **Interactive UI Upgrade:** Fully migrated all static visualizations (Matplotlib/Seaborn) to interactive Plotly charts (`px.histogram`, `px.scatter`, `px.box`, `px.violin`, `px.imshow`). Charts now support zooming, panning, and hover-tooltips.
+- **Premium Dashboard Aesthetics:** Upgraded `dp.dashboard()` HTML export to a modern, SaaS-like dark mode. Features glassmorphism (backdrop-filter blurs), modern typography (Inter font), responsive CSS grid, and hover animations for a stunning presentation.
+- `dp.visualize_ai()` now generates interactive Plotly figures based on natural language prompts instead of Matplotlib axes.
+- `plotly` is now a core dependency in `pyproject.toml`.
+
+---
+
 ## [0.4.3] - 2026-07-06
 
 ### Fixed

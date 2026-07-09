@@ -144,132 +144,180 @@ def dashboard(df: Union[pd.DataFrame, pl.DataFrame], output_path: str = "datapil
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DataPilot Analytics Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ── Offline font stack ── */
+        :root {{
+            --bg-color: #0f172a;
+            --surface-color: rgba(30, 41, 59, 0.7);
+            --surface-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --danger: #f43f5e;
+            --success: #10b981;
+        }}
         body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-                         Helvetica, Arial, sans-serif;
-            background: #f0f4f8;
-            color: #2d3748;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 25%);
+            background-attachment: fixed;
+            color: var(--text-main);
             margin: 0;
-            padding: 24px;
+            padding: 32px 24px;
         }}
-        .container {{ max-width: 1120px; margin: 0 auto; }}
+        .container {{ max-width: 1200px; margin: 0 auto; }}
+        
+        /* ── Glassmorphism Utility ── */
+        .glass {{
+            background: var(--surface-color);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--surface-border);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }}
+
         .header {{
-            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
-            color: #fff;
-            padding: 32px 36px;
-            border-radius: 14px;
-            margin-bottom: 28px;
-            box-shadow: 0 4px 14px rgba(74,144,226,.25);
+            padding: 36px 40px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
         }}
-        .header h1 {{ margin: 0 0 6px; font-size: 26px; font-weight: 700; }}
-        .header p  {{ margin: 0; opacity: .88; font-size: 14px; }}
+        .header::before {{
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, #38bdf8, #8b5cf6);
+        }}
+        .header h1 {{ margin: 0 0 8px; font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }}
+        .header p  {{ margin: 0; color: var(--text-muted); font-size: 15px; font-weight: 400; }}
+        
         .grid {{
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 18px;
-            margin-bottom: 28px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
         }}
         .card {{
-            background: #fff;
-            padding: 22px 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,.06);
+            padding: 24px;
             text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }}
+        .card:hover {{
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border-color: rgba(56, 189, 248, 0.3);
         }}
         .card h3 {{
             margin: 0;
-            font-size: 11px;
+            font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #718096;
-        }}
-        .card .value {{
-            font-size: 28px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin: 10px 0 0;
-        }}
-        .section {{
-            background: #fff;
-            padding: 26px 28px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,.06);
-            margin-bottom: 26px;
-        }}
-        .section h2 {{
-            margin: 0 0 16px;
-            font-size: 17px;
-            color: #2c3e50;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #edf2f7;
-        }}
-        table {{ width: 100%; border-collapse: collapse; }}
-        th, td {{
-            padding: 11px 14px;
-            text-align: left;
-            border-bottom: 1px solid #edf2f7;
-            font-size: 14px;
-        }}
-        th {{ background: #f7fafc; color: #4a5568; font-weight: 600; }}
-        code {{
-            background: #edf2f7;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 12px;
-        }}
-        .badge {{
-            display: inline-block;
-            padding: 3px 9px;
-            border-radius: 12px;
-            font-size: 12px;
+            letter-spacing: 1.2px;
+            color: var(--text-muted);
             font-weight: 600;
         }}
-        .badge-danger  {{ background: #fed7d7; color: #c53030; }}
-        .badge-success {{ background: #c6f6d5; color: #276749; }}
+        .card .value {{
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 12px 0 0;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }}
+        
+        .section {{
+            padding: 32px;
+            margin-bottom: 32px;
+        }}
+        .section h2 {{
+            margin: 0 0 20px;
+            font-size: 18px;
+            color: var(--text-main);
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--surface-border);
+            font-weight: 600;
+        }}
+        
+        table {{ width: 100%; border-collapse: collapse; }}
+        th, td {{
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }}
+        tr {{ transition: background 0.15s ease; }}
+        tr:hover td {{ background: rgba(255, 255, 255, 0.03); }}
+        th {{ color: var(--text-muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }}
+        
+        code {{
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--accent);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }}
+        
+        .badge {{
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }}
+        .badge-danger  {{ background: rgba(244, 63, 94, 0.15); color: var(--danger); border: 1px solid rgba(244, 63, 94, 0.3); }}
+        .badge-success {{ background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }}
+        
         .footer {{
             text-align: center;
-            margin-top: 8px;
-            font-size: 12px;
-            color: #a0aec0;
+            margin-top: 40px;
+            font-size: 13px;
+            color: var(--text-muted);
+            padding-bottom: 20px;
         }}
     </style>
 </head>
 <body>
     <div class="container">
 
-        <div class="header">
-            <h1>📊 DataPilot Dataset Report</h1>
-            <p>Automated high-speed profiling dashboard &nbsp;•&nbsp; Engine: <strong>{meta['engine_detected'].upper()}</strong></p>
+        <div class="header glass">
+            <h1>DataPilot Diagnostics</h1>
+            <p>Automated high-speed profiling dashboard &nbsp;•&nbsp; Engine: <strong style="color:var(--accent)">{meta['engine_detected'].upper()}</strong></p>
         </div>
 
         <!-- ── Summary Cards ── -->
         <div class="grid">
-            <div class="card">
+            <div class="card glass">
                 <h3>Total Rows</h3>
                 <div class="value">{meta['rows']:,}</div>
             </div>
-            <div class="card">
+            <div class="card glass">
                 <h3>Total Columns</h3>
                 <div class="value">{meta['columns']}</div>
             </div>
-            <div class="card">
+            <div class="card glass">
                 <h3>Duplicate Rows</h3>
-                <div class="value">{dup_df['duplicate_count']} <span style="font-size:14px;font-weight:400;color:#718096;">({dup_df['duplicate_percentage']}%)</span></div>
+                <div class="value">{dup_df['duplicate_count']} <span style="font-size:14px;font-weight:500;color:var(--text-muted);-webkit-text-fill-color:var(--text-muted)">({dup_df['duplicate_percentage']}%)</span></div>
             </div>
-            <div class="card">
+            <div class="card glass">
                 <h3>Memory Footprint</h3>
-                <div class="value">{meta['memory_usage_mb']} <span style="font-size:14px;font-weight:400;color:#718096;">MB</span></div>
+                <div class="value">{meta['memory_usage_mb']} <span style="font-size:14px;font-weight:500;color:var(--text-muted);-webkit-text-fill-color:var(--text-muted)">MB</span></div>
             </div>
-            <div class="card">
+            <div class="card glass">
                 <h3>Missing Values</h3>
                 <div class="value">{meta['total_missing_values']:,}</div>
             </div>
         </div>
 
         <!-- ── Data Types ── -->
-        <div class="section">
+        <div class="section glass">
             <h2>🗂️ Column Data Types</h2>
             <table>
                 <thead><tr><th>Column</th><th>Data Type</th></tr></thead>
@@ -278,7 +326,7 @@ def dashboard(df: Union[pd.DataFrame, pl.DataFrame], output_path: str = "datapil
         </div>
 
         <!-- ── Missing Values ── -->
-        <div class="section">
+        <div class="section glass">
             <h2>🔍 Missing Values Diagnostics</h2>
             <table>
                 <thead>
@@ -290,7 +338,7 @@ def dashboard(df: Union[pd.DataFrame, pl.DataFrame], output_path: str = "datapil
         </div>
 
         <!-- ── Correlation Pairs ── -->
-        <div class="section">
+        <div class="section glass">
             <h2>🔗 Strong Linear Correlations (|r| ≥ 0.6)</h2>
             <table>
                 <thead><tr><th>Variable Pair</th><th>Pearson r</th><th>Direction</th></tr></thead>
@@ -299,7 +347,7 @@ def dashboard(df: Union[pd.DataFrame, pl.DataFrame], output_path: str = "datapil
         </div>
 
         <!-- ── Correlation Heatmap ── -->
-        {heatmap_section}
+        {heatmap_section.replace("class='section'", "class='section glass'")}
 
         <div class="footer">
             Generated securely by <strong>DataPilot</strong> Core Engine &nbsp;•&nbsp; No raw data was transmitted.
