@@ -232,10 +232,16 @@ dp.ask_ai(df, "Should I log-transform Fare or normalise Age first?")
 
 ## Module 9: Visualization Engine
 
-Includes publication-ready, interactive Plotly charts with a dark theme (`plotly_dark`) and automatic statistical overlays.
+Includes publication-ready, interactive Plotly charts with a dark theme (`plotly_dark`) and automatic statistical overlays. 
+
+**Note:** All manual charting functions return a Plotly `Figure` object. In Jupyter Notebooks, simply returning the figure displays it. In standard Python scripts, you must call `.show()` on the returned figure to view it.
 
 ### `dp.hist(df, column, bins="auto", hue=None, color="#3b82f6")`
 Interactive histogram with automatic KDE overlay, plus mean and median dashed lines.
+```python
+fig = dp.hist(df, "Age")
+fig.show()  # Required in standard scripts
+```
 
 ### `dp.box(df, column, group_by=None, orient="v")`
 Interactive box plot with median highlights and automatic IQR annotation.
