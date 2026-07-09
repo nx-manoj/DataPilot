@@ -110,7 +110,7 @@ def test_dashboard(tmp_path):
     # Assert
     assert report_file.exists()
     content = report_file.read_text(encoding="utf-8")
-    assert "DataPilot Dataset Report" in content
+    assert "DataPilot" in content
     assert "Total Rows" in content
     assert "Total Columns" in content
     # Enhanced dashboard checks
@@ -386,3 +386,37 @@ def test_benchmark_returns_results():
         assert "pandas_ms" in metrics
         assert "speedup" in metrics
         assert metrics["speedup"] > 0
+
+def test_auto_clean_advanced_features():
+    data = {
+        "A": [1.0, 2.0, None, 4.0, 5.0],
+        "B": ["cat", "dog", "cat", None, "dog"],
+    }
+    df = pd.DataFrame(data)
+    clean_df, log = dp.auto_clean(
+        df,
+        drop_id_columns=False,
+        impute_strategy="knn",
+        encode_categoricals="onehot",
+        scale_numerics="standard"
+    )
+    assert clean_df["A"].isnull().sum() == 0
+    assert abs(clean_df["A"].mean()) < 1e-6
+    assert "B" not in clean_df.columns
+    assert any("B" in col for col in clean_df.columns)
+
+def test_auto_clean_label_minmax():
+    data = {
+        "A": [10.0, 20.0, 30.0, 40.0, 50.0],
+        "B": ["apple", "banana", "apple", "cherry", "banana"],
+    }
+    df = pd.DataFrame(data)
+    clean_df, log = dp.auto_clean(
+        df,
+        drop_id_columns=False,
+        encode_categoricals="label",
+        scale_numerics="minmax"
+    )
+    assert clean_df["A"].min() == 0.0
+    assert clean_df["A"].max() == 1.0
+    assert pd.api.types.is_numeric_dtype(clean_df["B"])

@@ -200,12 +200,17 @@ result = dp.outliers(df, use_ai=True)
 
 ## Module 6: Auto Data Cleaning
 
-### `dp.auto_clean(df, drop_null_threshold=0.6, impute_strategy="auto", drop_id_columns=True, drop_constant_columns=True, use_ai=False, ...)`
+### `dp.auto_clean(df, drop_null_threshold=0.6, impute_strategy="auto", encode_categoricals=None, scale_numerics=None, drop_id_columns=True, drop_constant_columns=True, use_ai=False, ...)`
 
-Automatically cleans the dataset and logs changes. Enabling `use_ai=True` appends a conversational explanation of why the actions improve model quality.
+Automatically cleans the dataset and logs changes. Enabling `use_ai=True` appends a conversational explanation of why the actions improve model quality. 
+
+Advanced ML preprocessing is now supported directly within this function:
+- `impute_strategy`: Uses median/mode by default, or `"knn"` to use `sklearn.impute.KNNImputer` for numerical columns.
+- `encode_categoricals`: Pass `"onehot"` to get dummy variables, or `"label"` for integer encoding of categorical columns.
+- `scale_numerics`: Pass `"standard"` (Z-score) or `"minmax"` to scale numerical features, essential for distance-based ML models.
 
 ```python
-clean_df, change_log = dp.auto_clean(df, use_ai=True)
+clean_df, change_log = dp.auto_clean(df, impute_strategy="knn", encode_categoricals="onehot", scale_numerics="standard", use_ai=True)
 ```
 
 ---

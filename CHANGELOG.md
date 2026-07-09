@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [0.5.0] - 2026-07-09
 
 ### Added
+- **Advanced Auto-Cleaning (`dp.auto_clean`)**: Now supports advanced ML preprocessing directly inside the function!
+  - `impute_strategy="knn"`: Uses `sklearn.impute.KNNImputer` for numerical missing values.
+  - `encode_categoricals`: Pass `"onehot"` to get dummy variables, or `"label"` for integer encoding of categorical columns.
+  - `scale_numerics`: Pass `"standard"` (Z-score) or `"minmax"` to scale numerical features, essential for distance-based ML models.
 - **DataPilot Web Studio:** A new interactive Streamlit web application. Call `dp.launch_studio()` to launch a local browser app where you can drag-and-drop CSVs, view the dashboard in real-time, and chat with your AI copilot.
 - **Interactive UI Upgrade:** Fully migrated all static visualizations (Matplotlib/Seaborn) to interactive Plotly charts (`px.histogram`, `px.scatter`, `px.box`, `px.violin`, `px.imshow`). Charts now support zooming, panning, and hover-tooltips.
 - **Premium Dashboard Aesthetics:** Upgraded `dp.dashboard()` HTML export to a modern, SaaS-like dark mode. Features glassmorphism (backdrop-filter blurs), modern typography (Inter font), responsive CSS grid, and hover animations for a stunning presentation.

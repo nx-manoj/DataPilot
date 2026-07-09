@@ -80,9 +80,10 @@ def outliers(df, method="both", z_threshold=3.0, iqr_multiplier=1.5,
                      ai_provider=ai_provider, ai_model=ai_model, api_key=api_key)
 
 def auto_clean(df, drop_null_threshold=0.6, impute_strategy="auto",
+               encode_categoricals=None, scale_numerics=None,
                drop_id_columns=True, drop_constant_columns=True,
                use_ai=False, ai_provider=None, ai_model=None, api_key=None):
-    """Automatically cleans a dataset — drops bad columns, imputes nulls.
+    """Automatically cleans a dataset — drops bad columns, imputes nulls, encodes, scales.
 
     Pass use_ai=True for an AI explanation of the changes and next steps.
     """
@@ -91,6 +92,8 @@ def auto_clean(df, drop_null_threshold=0.6, impute_strategy="auto",
         df,
         drop_null_threshold=drop_null_threshold,
         impute_strategy=impute_strategy,
+        encode_categoricals=encode_categoricals,
+        scale_numerics=scale_numerics,
         drop_id_columns=drop_id_columns,
         drop_constant_columns=drop_constant_columns,
         use_ai=use_ai,

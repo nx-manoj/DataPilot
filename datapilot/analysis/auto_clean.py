@@ -9,6 +9,8 @@ def auto_clean(
     df: Union[pd.DataFrame, pl.DataFrame],
     drop_null_threshold: float = 0.6,
     impute_strategy: str = "auto",
+    encode_categoricals: Optional[str] = None,
+    scale_numerics: Optional[str] = None,
     drop_id_columns: bool = True,
     drop_constant_columns: bool = True,
     use_ai: bool = False,
@@ -22,13 +24,17 @@ def auto_clean(
     1. Drops constant columns (zero variance)
     2. Drops ID-like columns (100% unique values)
     3. Drops columns exceeding the null threshold
-    4. Imputes remaining numeric nulls with median
+    4. Imputes remaining numeric nulls (median or KNN)
     5. Imputes remaining categorical/string nulls with mode
+    6. Encodes categoricals (onehot or label)
+    7. Scales numerics (standard or minmax)
 
     Args:
         df: Input DataFrame (Pandas or Polars).
         drop_null_threshold: Columns with null % above this are dropped (default: 0.60 = 60%).
-        impute_strategy: 'auto' (median for numeric, mode for categorical), 'median', or 'mode'.
+        impute_strategy: 'auto', 'knn', 'median', or 'mode'.
+        encode_categoricals: 'onehot', 'label', or None.
+        scale_numerics: 'standard', 'minmax', or None.
         drop_id_columns: Whether to drop columns where all values are unique (default: True).
         drop_constant_columns: Whether to drop columns with a single unique value (default: True).
 
@@ -90,6 +96,36 @@ def auto_clean(
     clean_df = local_df.drop(cols_to_drop) if cols_to_drop else local_df.clone()
 
     # ── 4 & 5. Impute remaining nulls ─────────────────────────────────────────
+    # If strategy is KNN, check if scikit-learn is available
+    if impute_strategy == "knn":
+        try:
+            from sklearn.impute import KNNImputer
+            import numpy as np
+            
+            num_cols = [c for c in clean_df.columns if clean_df[c].dtype.is_numeric()]
+            if num_cols:
+                # Find columns that actually need imputation
+                null_cols = [c for c in num_cols if clean_df[c].null_count() > 0]
+                if null_cols:
+                    imputer = KNNImputer(n_neighbors=5)
+                    X = clean_df.select(num_cols).to_numpy()
+                    X_imputed = imputer.fit_transform(X)
+                    
+                    imputed_df = pl.DataFrame(X_imputed, schema=num_cols)
+                    clean_df = clean_df.with_columns([pl.Series(c, imputed_df[c]) for c in num_cols])
+                    
+                    for col in null_cols:
+                        null_ct = null_counts[col][0]
+                        change_log.append({
+                            "action": "IMPUTED",
+                            "column": col,
+                            "reason": f"Filled {null_ct} null(s) using KNN Imputer (k=5)",
+                        })
+                        print(f"\n  🔧  IMPUTE '{col}'  →  filled {null_ct} null(s) with KNN")
+        except ImportError:
+            print("\n  ⚠️  scikit-learn is required for KNN imputation. Falling back to median.")
+            impute_strategy = "median"
+
     impute_exprs = []
     for col in clean_df.columns:
         dtype    = clean_df[col].dtype
@@ -109,7 +145,7 @@ def auto_clean(
                     })
                     print(f"\n  🔧  IMPUTE '{col}'  →  filled {null_ct} null(s) with median={round(median_val, 4)}")
         else:
-            if impute_strategy in ("auto", "mode"):
+            if impute_strategy in ("auto", "mode", "knn"): # knn doesn't do strings, so we still mode impute strings
                 modes = clean_df[col].drop_nulls().mode()
                 if modes.len() > 0:
                     mode_val = str(modes[0])
@@ -123,6 +159,61 @@ def auto_clean(
 
     if impute_exprs:
         clean_df = clean_df.with_columns(impute_exprs)
+
+    # ── 6. Encode Categoricals ────────────────────────────────────────────────
+    if encode_categoricals:
+        cat_cols = [c for c in clean_df.columns if clean_df[c].dtype in (pl.Utf8, pl.Categorical, pl.Enum)]
+        if cat_cols:
+            if encode_categoricals == "onehot":
+                clean_df = clean_df.to_dummies(columns=cat_cols)
+                change_log.append({
+                    "action": "ENCODED",
+                    "column": "Multiple",
+                    "reason": f"One-hot encoded {len(cat_cols)} categorical columns.",
+                })
+                print(f"\n  🔢  ENCODE → One-hot encoded {len(cat_cols)} column(s)")
+            elif encode_categoricals == "label":
+                # Convert string to categorical and then to integer (physical)
+                exprs = [pl.col(c).cast(pl.Categorical).to_physical().alias(c) for c in cat_cols]
+                clean_df = clean_df.with_columns(exprs)
+                change_log.append({
+                    "action": "ENCODED",
+                    "column": "Multiple",
+                    "reason": f"Label encoded {len(cat_cols)} categorical columns.",
+                })
+                print(f"\n  🔢  ENCODE → Label encoded {len(cat_cols)} column(s)")
+
+    # ── 7. Scale Numerics ─────────────────────────────────────────────────────
+    if scale_numerics:
+        num_cols = [c for c in clean_df.columns if clean_df[c].dtype.is_numeric()]
+        if num_cols:
+            if scale_numerics == "standard":
+                # Handle standard deviation being 0 by keeping the column or filling with 0
+                exprs = [
+                    pl.when(pl.col(c).std() == 0).then(0.0)
+                    .otherwise((pl.col(c) - pl.col(c).mean()) / pl.col(c).std())
+                    .alias(c) for c in num_cols
+                ]
+                clean_df = clean_df.with_columns(exprs)
+                change_log.append({
+                    "action": "SCALED",
+                    "column": "Multiple",
+                    "reason": f"Standard scaled (Z-score) {len(num_cols)} numeric columns.",
+                })
+                print(f"\n  📏  SCALE  → Standard scaled {len(num_cols)} numeric column(s)")
+            elif scale_numerics == "minmax":
+                exprs = [
+                    pl.when(pl.col(c).max() == pl.col(c).min()).then(0.0)
+                    .otherwise((pl.col(c) - pl.col(c).min()) / (pl.col(c).max() - pl.col(c).min()))
+                    .alias(c) for c in num_cols
+                ]
+                clean_df = clean_df.with_columns(exprs)
+                change_log.append({
+                    "action": "SCALED",
+                    "column": "Multiple",
+                    "reason": f"Min-Max scaled {len(num_cols)} numeric columns.",
+                })
+                print(f"\n  📏  SCALE  → Min-Max scaled {len(num_cols)} numeric column(s)")
 
     print("\n" + "-" * 58)
     print(f"  Output: {clean_df.height:,} rows × {clean_df.width} columns")
