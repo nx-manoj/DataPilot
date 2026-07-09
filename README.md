@@ -40,14 +40,15 @@ DataPilot is an open-source Python library that automates Exploratory Data Analy
 7. [Module 5: Outlier Detection](#module-5-outlier-detection)
 8. [Module 6: Auto Data Cleaning](#module-6-auto-data-cleaning)
 9. [Module 7: Train/Test Drift Detection](#module-7-traintest-drift-detection)
-10. [Module 8: Conversational AI (Ask AI)](#module-8-conversational-ai-ask-ai)
-11. [Module 9: Visualization Engine](#module-9-visualization-engine)
-12. [Module 10: Machine Learning Diagnostics](#module-10-machine-learning-diagnostics)
-13. [Module 11: Standalone HTML Dashboard](#module-11-standalone-html-dashboard)
-13. [Module 12: Performance Benchmark](#module-12-performance-benchmark)
-14. [Module 13: DataPilot Web Studio](#module-13-datapilot-web-studio)
-15. [Module 14: AI Copilot Providers](#module-14-ai-copilot-providers)
-16. [Troubleshooting](#troubleshooting)
+10. [Module 8: Time-Series Profiling](#module-8-time-series-profiling)
+11. [Module 9: Conversational AI (Ask AI)](#module-9-conversational-ai-ask-ai)
+12. [Module 10: Visualization Engine](#module-10-visualization-engine)
+13. [Module 11: Machine Learning Diagnostics](#module-11-machine-learning-diagnostics)
+14. [Module 12: Standalone HTML Dashboard](#module-12-standalone-html-dashboard)
+15. [Module 13: Performance Benchmark](#module-13-performance-benchmark)
+16. [Module 14: DataPilot Web Studio](#module-14-datapilot-web-studio)
+17. [Module 15: AI Copilot Providers](#module-15-ai-copilot-providers)
+18. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -227,7 +228,20 @@ flags = dp.compare(df_train, df_test, use_ai=True)
 
 ---
 
-## Module 8: Conversational AI (Ask AI)
+## Module 8: Time-Series Profiling
+
+### `dp.time_series_profile(df, time_col="Date", value_col="Sales")`
+
+Automatically detects the time interval (daily, hourly, etc.) and identifies any missing dates/gaps in your sequence. Also provides the overall trend direction (upward/downward) if a `value_col` is provided.
+
+```python
+profile = dp.time_series_profile(df, time_col="Date", value_col="Sales")
+# Identifies start date, end date, frequency, and missing gaps!
+```
+
+---
+
+## Module 9: Conversational AI (Ask AI)
 
 ### `dp.ask_ai(df, question, ai_provider=None, ai_model=None, api_key=None)`
 

@@ -6,7 +6,7 @@ def configure(ai_provider="ollama", ai_model=None, api_key=None):
     """Set AI provider, model, and API key once for the entire session.
 
     After calling configure(), every use_ai=True function call automatically
-    uses these settings — no need to pass api_key on each call.
+    uses these settings - no need to pass api_key on each call.
 
     Example
     -------
@@ -41,7 +41,7 @@ def correlation(df, threshold=0.6):
 def analyze(df, use_ai=False, ai_provider=None, ai_model=None, api_key=None):
     """Runs the full automated EDA pipeline with optional AI insights.
 
-    Reads from dp.configure() by default — pass overrides only when needed.
+    Reads from dp.configure() by default - pass overrides only when needed.
 
     ai_provider options: 'ollama' (local/default), 'openai', 'gemini', 'claude', 'groq'
     """
@@ -83,7 +83,7 @@ def auto_clean(df, drop_null_threshold=0.6, impute_strategy="auto",
                encode_categoricals=None, scale_numerics=None,
                drop_id_columns=True, drop_constant_columns=True,
                use_ai=False, ai_provider=None, ai_model=None, api_key=None):
-    """Automatically cleans a dataset — drops bad columns, imputes nulls, encodes, scales.
+    """Automatically cleans a dataset - drops bad columns, imputes nulls, encodes, scales.
 
     Pass use_ai=True for an AI explanation of the changes and next steps.
     """
@@ -107,13 +107,21 @@ def benchmark(df):
     from .analysis.benchmark import benchmark as _benchmark
     return _benchmark(df)
 
+def time_series_profile(df, time_col, value_col=None):
+    """Profiles a time-series dataset.
+    
+    Automatically detects intervals, flags missing dates/gaps, and summarizes trends.
+    """
+    from .analysis.time_series import time_series_profile as _ts_profile
+    return _ts_profile(df, time_col=time_col, value_col=value_col)
+
 
 # ── AI Copilot ─────────────────────────────────────────────────────────────────
 
 def ask_ai(df, question, ai_provider=None, ai_model=None, api_key=None):
     """Ask a free-form natural-language question about your dataset.
 
-    DataPilot sends only statistical metadata to the AI — raw data rows are
+    DataPilot sends only statistical metadata to the AI - raw data rows are
     never transmitted.  Reads from dp.configure() by default.
 
     Example
@@ -155,21 +163,14 @@ def violin(df, column, group_by=None):
     return _violin(df, column, group_by=group_by)
 
 def visualize_ai(df, prompt, ai_provider=None, ai_model=None, api_key=None):
-    """Ask the AI to choose and draw the right chart from a plain-English prompt.
+    """Uses the AI Copilot to generate a plot based on a natural language prompt."""
+    from .visualization.ai_plot import visualize_ai as _viz_ai
+    return _viz_ai(df, prompt, ai_provider=ai_provider, ai_model=ai_model, api_key=api_key)
 
-    DataPilot sends only column names + dtypes to the AI (no raw data).
-    The chart is rendered 100% locally with Seaborn.
-
-    Example
-    -------
-        dp.configure(ai_provider="groq", api_key="gsk_...")
-        dp.visualize_ai(df, "Show the relation between Age and Survived")
-        dp.visualize_ai(df, "Distribution of Fare by Pclass")
-        dp.visualize_ai(df, "Correlation heatmap of all numeric columns")
-    """
-    from .visualization.visualize_ai import visualize_ai as _viz_ai
-    return _viz_ai(df, prompt, ai_provider=ai_provider,
-                   ai_model=ai_model, api_key=api_key)
+def plot_time_series(df, time_col, value_col, title=None, color="#3b82f6"):
+    """Generates an interactive Plotly time-series line chart."""
+    from .visualization.time_series import plot_time_series as _plot_ts
+    return _plot_ts(df, time_col, value_col, title=title, color=color)
 
 
 # ── Machine Learning ───────────────────────────────────────────────────────────
@@ -180,12 +181,12 @@ def classification_report(y_true, y_pred, average="auto"):
     return _cr(y_true, y_pred, average=average)
 
 def regression_report(y_true, y_pred):
-    """Calculates comprehensive regression evaluation metrics (MAE, RMSE, R², MAPE)."""
+    """Calculates comprehensive regression evaluation metrics (MAE, RMSE, R2, MAPE)."""
     from .ml.regression import regression_report as _rr
     return _rr(y_true, y_pred)
 
 def diagnose(train_score, test_score, metric_name="Accuracy"):
-    """Diagnoses model health — overfitting, underfitting, or optimal state."""
+    """Diagnoses model health - overfitting, underfitting, or optimal state."""
     from .ml.diagnostics import diagnose as _diagnose
     return _diagnose(train_score, test_score, metric_name)
 
@@ -209,11 +210,11 @@ __all__ = [
     "configure",
     # Analysis
     "summary", "missing", "duplicates", "correlation", "analyze",
-    "suggest", "compare", "outliers", "auto_clean", "benchmark",
+    "suggest", "compare", "outliers", "auto_clean", "benchmark", "time_series_profile",
     # AI Copilot
     "ask_ai",
     # Visualization
-    "hist", "box", "heatmap", "scatter", "violin", "visualize_ai",
+    "hist", "box", "heatmap", "scatter", "violin", "visualize_ai", "plot_time_series",
     # ML
     "classification_report", "regression_report", "diagnose",
     # Dashboard

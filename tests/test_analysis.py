@@ -420,3 +420,23 @@ def test_auto_clean_label_minmax():
     assert clean_df["A"].min() == 0.0
     assert clean_df["A"].max() == 1.0
     assert pd.api.types.is_numeric_dtype(clean_df["B"])
+
+def test_time_series_profile():
+    import datetime
+    data = {
+        "Date": [
+            datetime.date(2023, 1, 1),
+            datetime.date(2023, 1, 2),
+            datetime.date(2023, 1, 3),
+            datetime.date(2023, 1, 5) # Note the missing 4th day
+        ],
+        "Sales": [100, 150, 120, 200]
+    }
+    df = pd.DataFrame(data)
+    report = dp.time_series_profile(df, time_col="Date", value_col="Sales")
+    
+    assert report["time_column"] == "Date"
+    assert report["gap_count"] == 1 # 4th is missing
+    assert report["total_rows"] == 4
+    assert report["trend"] == "upward" # 100 -> 200
+    assert "inferred_frequency" in report
