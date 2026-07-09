@@ -1,0 +1,2408 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Your Data Science Copilot — Polars-native EDA, auto-cleaning, drift detection, and multi-provider AI insights.">
+      
+      
+        <meta name="author" content="Manoj">
+      
+      
+      
+      
+        <link rel="next" href="api/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>DataPilot</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#datapilot-your-data-science-copilot" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="DataPilot" class="md-header__button md-logo" aria-label="DataPilot" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DataPilot
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/nx-manoj/DataPilot" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    nx-manoj/DataPilot
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="index.md#installation" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="index.md#module-1-fast-statistical-summary" class="md-tabs__link">
+          
+  
+  
+  Modules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="api/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Reference
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="DataPilot" class="md-nav__button md-logo" aria-label="DataPilot" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DataPilot
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/nx-manoj/DataPilot" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    nx-manoj/DataPilot
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-datapilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Why DataPilot?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📑 Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-pypi-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From PyPI (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-source-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Source (Development)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-1-global-session-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 1: Global Session Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 1: Global Session Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpconfigureai_providerollama-ai_modelnone-api_keynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.configure(ai_provider="ollama", ai_model=None, api_key=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-2-auto-eda-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 2: Auto EDA Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 2: Auto EDA Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpanalyzedf-use_aifalse-ai_providernone-ai_modelnone-api_keynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.analyze(df, use_ai=False, ai_provider=None, ai_model=None, api_key=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-3-smart-column-suggestions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 3: Smart Column Suggestions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 3: Smart Column Suggestions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpsuggestdf-use_aifalse-ai_providernone-ai_modelnone-api_keynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.suggest(df, use_ai=False, ai_provider=None, ai_model=None, api_key=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-4-dataset-analysis-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 4: Dataset Analysis API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 4: Dataset Analysis API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpsummarydf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.summary(df)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpmissingdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.missing(df)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpduplicatesdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.duplicates(df)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpcorrelationdf-threshold06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.correlation(df, threshold=0.6)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-5-outlier-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 5: Outlier Detection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 5: Outlier Detection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpoutliersdf-methodboth-z_threshold30-iqr_multiplier15-use_aifalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.outliers(df, method="both", z_threshold=3.0, iqr_multiplier=1.5, use_ai=False, ...)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-6-auto-data-cleaning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 6: Auto Data Cleaning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 6: Auto Data Cleaning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpauto_cleandf-drop_null_threshold06-impute_strategyauto-drop_id_columnstrue-drop_constant_columnstrue-use_aifalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.auto_clean(df, drop_null_threshold=0.6, impute_strategy="auto", drop_id_columns=True, drop_constant_columns=True, use_ai=False, ...)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-7-traintest-drift-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 7: Train/Test Drift Detection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 7: Train/Test Drift Detection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpcomparedf_train-df_test-threshold01-use_aifalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.compare(df_train, df_test, threshold=0.1, use_ai=False, ...)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-8-conversational-ai-ask-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 8: Conversational AI (Ask AI)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 8: Conversational AI (Ask AI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpask_aidf-question-ai_providernone-ai_modelnone-api_keynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.ask_ai(df, question, ai_provider=None, ai_model=None, api_key=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-9-visualization-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 9: Visualization Engine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 9: Visualization Engine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dphistdf-column-binsauto-huenone-color3b82f6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.hist(df, column, bins="auto", hue=None, color="#3b82f6")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpboxdf-column-group_bynone-orientv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.box(df, column, group_by=None, orient="v")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpheatmapdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.heatmap(df)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpscatterdf-x-y-huenone-trendlinetrue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.scatter(df, x, y, hue=None, trendline=True)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpviolindf-column-group_bynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.violin(df, column, group_by=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpvisualize_aidf-prompt-ai_providernone-ai_modelnone-api_keynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.visualize_ai(df, prompt, ai_provider=None, ai_model=None, api_key=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-10-machine-learning-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 10: Machine Learning Diagnostics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 10: Machine Learning Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpclassification_reporty_true-y_pred-averageauto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.classification_report(y_true, y_pred, average="auto")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpregression_reporty_true-y_pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.regression_report(y_true, y_pred)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpdiagnosetrain_score-test_score-metric_nameaccuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.diagnose(train_score, test_score, metric_name="Accuracy")
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-11-standalone-html-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 11: Standalone HTML Dashboard
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 11: Standalone HTML Dashboard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpdashboarddf-output_pathdatapilot_reporthtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.dashboard(df, output_path="datapilot_report.html")
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-12-performance-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 12: Performance Benchmark
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 12: Performance Benchmark">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpbenchmarkdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.benchmark(df)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-13-datapilot-web-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 13: DataPilot Web Studio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 13: DataPilot Web Studio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dplaunch_studioport8501" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.launch_studio(port=8501)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-14-ai-copilot-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 14: AI Copilot Providers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modulenotfounderror-after-editing-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ModuleNotFoundError after editing files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-ollama-connection-refused" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI: Ollama Connection Refused
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.md#installation" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.md#quick-start" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Modules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.md#module-1-fast-statistical-summary" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Profiling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.md#module-9-visualization-engine" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visualization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.md#module-10-machine-learning-diagnostics" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Machine Learning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.md#module-13-datapilot-web-studio" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DataPilot Web Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-datapilot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Why DataPilot?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📑 Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-pypi-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From PyPI (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-source-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Source (Development)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-1-global-session-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 1: Global Session Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 1: Global Session Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpconfigureai_providerollama-ai_modelnone-api_keynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.configure(ai_provider="ollama", ai_model=None, api_key=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-2-auto-eda-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 2: Auto EDA Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 2: Auto EDA Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpanalyzedf-use_aifalse-ai_providernone-ai_modelnone-api_keynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.analyze(df, use_ai=False, ai_provider=None, ai_model=None, api_key=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-3-smart-column-suggestions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 3: Smart Column Suggestions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 3: Smart Column Suggestions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpsuggestdf-use_aifalse-ai_providernone-ai_modelnone-api_keynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.suggest(df, use_ai=False, ai_provider=None, ai_model=None, api_key=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-4-dataset-analysis-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 4: Dataset Analysis API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 4: Dataset Analysis API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpsummarydf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.summary(df)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpmissingdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.missing(df)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpduplicatesdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.duplicates(df)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpcorrelationdf-threshold06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.correlation(df, threshold=0.6)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-5-outlier-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 5: Outlier Detection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 5: Outlier Detection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpoutliersdf-methodboth-z_threshold30-iqr_multiplier15-use_aifalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.outliers(df, method="both", z_threshold=3.0, iqr_multiplier=1.5, use_ai=False, ...)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-6-auto-data-cleaning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 6: Auto Data Cleaning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 6: Auto Data Cleaning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpauto_cleandf-drop_null_threshold06-impute_strategyauto-drop_id_columnstrue-drop_constant_columnstrue-use_aifalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.auto_clean(df, drop_null_threshold=0.6, impute_strategy="auto", drop_id_columns=True, drop_constant_columns=True, use_ai=False, ...)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-7-traintest-drift-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 7: Train/Test Drift Detection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 7: Train/Test Drift Detection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpcomparedf_train-df_test-threshold01-use_aifalse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.compare(df_train, df_test, threshold=0.1, use_ai=False, ...)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-8-conversational-ai-ask-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 8: Conversational AI (Ask AI)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 8: Conversational AI (Ask AI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpask_aidf-question-ai_providernone-ai_modelnone-api_keynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.ask_ai(df, question, ai_provider=None, ai_model=None, api_key=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-9-visualization-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 9: Visualization Engine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 9: Visualization Engine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dphistdf-column-binsauto-huenone-color3b82f6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.hist(df, column, bins="auto", hue=None, color="#3b82f6")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpboxdf-column-group_bynone-orientv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.box(df, column, group_by=None, orient="v")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpheatmapdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.heatmap(df)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpscatterdf-x-y-huenone-trendlinetrue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.scatter(df, x, y, hue=None, trendline=True)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpviolindf-column-group_bynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.violin(df, column, group_by=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpvisualize_aidf-prompt-ai_providernone-ai_modelnone-api_keynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.visualize_ai(df, prompt, ai_provider=None, ai_model=None, api_key=None)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-10-machine-learning-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 10: Machine Learning Diagnostics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 10: Machine Learning Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpclassification_reporty_true-y_pred-averageauto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.classification_report(y_true, y_pred, average="auto")
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpregression_reporty_true-y_pred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.regression_report(y_true, y_pred)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dpdiagnosetrain_score-test_score-metric_nameaccuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.diagnose(train_score, test_score, metric_name="Accuracy")
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-11-standalone-html-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 11: Standalone HTML Dashboard
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 11: Standalone HTML Dashboard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpdashboarddf-output_pathdatapilot_reporthtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.dashboard(df, output_path="datapilot_report.html")
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-12-performance-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 12: Performance Benchmark
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 12: Performance Benchmark">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dpbenchmarkdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.benchmark(df)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-13-datapilot-web-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 13: DataPilot Web Studio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Module 13: DataPilot Web Studio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dplaunch_studioport8501" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dp.launch_studio(port=8501)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-14-ai-copilot-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 14: AI Copilot Providers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modulenotfounderror-after-editing-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ModuleNotFoundError after editing files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-ollama-connection-refused" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI: Ollama Connection Refused
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="datapilot-your-data-science-copilot">📖 DataPilot — Your Data Science Copilot</h1>
+<p><a href="https://www.python.org/"><img alt="Python Version" src="https://img.shields.io/badge/python-3.9+-blue.svg" /></a>
+<a href="https://github.com/nx-manoj/DataPilot"><img alt="Version" src="https://img.shields.io/badge/version-0.5.0-brightgreen.svg" /></a>
+<a href="https://pola.rs/"><img alt="Core Engine" src="https://img.shields.io/badge/Powered%20By-Polars%20%7C%20Apache%20Arrow-orange.svg" /></a>
+<a href="https://github.com/nx-manoj/DataPilot"><img alt="AI Providers" src="https://img.shields.io/badge/AI-Ollama%20%7C%20OpenAI%20%7C%20Gemini%20%7C%20Claude%20%7C%20Groq-purple.svg" /></a>
+<a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
+<a href="https://github.com/nx-manoj/DataPilot"><img alt="Tests" src="https://img.shields.io/badge/tests-passed-success.svg" /></a></p>
+<blockquote>
+<p><strong>The only EDA library that is Polars-native, multi-provider AI-powered, and actually cleans your data.</strong></p>
+</blockquote>
+<p>DataPilot is an open-source Python library that automates Exploratory Data Analysis, detects data quality issues, cleans datasets, benchmarks performance, and generates intelligent AI recommendations — via Ollama (local), OpenAI, Google Gemini, Anthropic Claude, or Groq — all with minimal code.</p>
+<hr />
+<h2 id="why-datapilot">🚀 Why DataPilot?</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: center;">ydata-profiling</th>
+<th style="text-align: center;">sweetviz</th>
+<th style="text-align: center;">dtale</th>
+<th style="text-align: center;"><strong>DataPilot</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Polars-native (10x faster)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Local AI (Ollama, private)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Cloud AI (OpenAI/Gemini/Claude/Groq)</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Auto data cleaning</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Train/test drift detection</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Outlier detection</td>
+<td style="text-align: center;">⚠️</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Smart column suggestions</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Interactive Glassmorphic HTML dashboard</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>Regression diagnostics</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+<tr>
+<td>ML model diagnostics</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">✅</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="table-of-contents">📑 Table of Contents</h2>
+<ol>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#module-1-global-session-configuration">Module 1: Global Session Configuration</a></li>
+<li><a href="#module-2-auto-eda-pipeline">Module 2: Auto EDA Pipeline</a></li>
+<li><a href="#module-3-smart-column-suggestions">Module 3: Smart Column Suggestions</a></li>
+<li><a href="#module-4-dataset-analysis-api">Module 4: Dataset Analysis API</a></li>
+<li><a href="#module-5-outlier-detection">Module 5: Outlier Detection</a></li>
+<li><a href="#module-6-auto-data-cleaning">Module 6: Auto Data Cleaning</a></li>
+<li><a href="#module-7-traintest-drift-detection">Module 7: Train/Test Drift Detection</a></li>
+<li><a href="#module-8-conversational-ai-ask-ai">Module 8: Conversational AI (Ask AI)</a></li>
+<li><a href="#module-9-visualization-engine">Module 9: Visualization Engine</a></li>
+<li><a href="#module-10-machine-learning-diagnostics">Module 10: Machine Learning Diagnostics</a></li>
+<li><a href="#module-11-standalone-html-dashboard">Module 11: Standalone HTML Dashboard</a></li>
+<li><a href="#module-12-performance-benchmark">Module 12: Performance Benchmark</a></li>
+<li><a href="#module-13-datapilot-web-studio">Module 13: DataPilot Web Studio</a></li>
+<li><a href="#module-14-ai-copilot-providers">Module 14: AI Copilot Providers</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ol>
+<hr />
+<h2 id="installation">Installation</h2>
+<h3 id="from-pypi-recommended">From PyPI (Recommended)</h3>
+<p>To install the stable release:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>datapilot-polars
+</span></code></pre></div></p>
+<p>To install with optional cloud AI provider dependencies:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;datapilot-polars[openai]&quot;</span><span class="w">    </span><span class="c1"># OpenAI support</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;datapilot-polars[gemini]&quot;</span><span class="w">    </span><span class="c1"># Google Gemini support</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;datapilot-polars[claude]&quot;</span><span class="w">    </span><span class="c1"># Anthropic Claude support</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;datapilot-polars[groq]&quot;</span><span class="w">      </span><span class="c1"># Groq support (free tier)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;datapilot-polars[studio]&quot;</span><span class="w">    </span><span class="c1"># DataPilot Web Studio UI</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;datapilot-polars[all-ai]&quot;</span><span class="w">    </span><span class="c1"># All cloud AI providers at once</span>
+</span></code></pre></div></p>
+<h3 id="from-source-development">From Source (Development)</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Clone and install in editable mode</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/nx-manoj/DataPilot.git
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">cd</span><span class="w"> </span>DataPilot
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>uv<span class="w"> </span>venv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># For development / running tests</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>dev<span class="o">]</span>
+</span></code></pre></div>
+<hr />
+<h2 id="quick-start">Quick Start</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">datapilot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dp</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># 1. Configure AI provider once (Optional)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">dp</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">ai_provider</span><span class="o">=</span><span class="s2">&quot;groq&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;gsk_...&quot;</span><span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;your_dataset.csv&quot;</span><span class="p">)</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># 2. Full automated EDA with AI insights</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="n">dp</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">use_ai</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># 3. Get preprocessing suggestions with AI recommendations</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="n">suggestions</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">suggest</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">use_ai</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># 4. Ask the AI conversational questions about the data</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="n">dp</span><span class="o">.</span><span class="n">ask_ai</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;What are the most important preprocessing steps for this dataset?&quot;</span><span class="p">)</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># 5. Generate plots with natural language prompts</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="n">dp</span><span class="o">.</span><span class="n">visualize_ai</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;Show the relation between Age and Survived&quot;</span><span class="p">)</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="c1"># 6. Auto-clean the dataset</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="n">clean_df</span><span class="p">,</span> <span class="n">log</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">auto_clean</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">use_ai</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="c1"># 7. Export a full offline HTML report</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="n">dp</span><span class="o">.</span><span class="n">dashboard</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;report.html&quot;</span><span class="p">)</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="c1"># 8. Launch the interactive DataPilot Web Studio in your browser</span>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="n">dp</span><span class="o">.</span><span class="n">launch_studio</span><span class="p">()</span>
+</span></code></pre></div>
+<hr />
+<h2 id="module-1-global-session-configuration">Module 1: Global Session Configuration</h2>
+<h3 id="dpconfigureai_providerollama-ai_modelnone-api_keynone"><code>dp.configure(ai_provider="ollama", ai_model=None, api_key=None)</code></h3>
+<p>Set your credentials once at the beginning of your session. Subsequent calls containing <code>use_ai=True</code> will automatically fetch these credentials.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure cloud AI (e.g., Groq)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">dp</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">ai_provider</span><span class="o">=</span><span class="s2">&quot;groq&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;gsk_...&quot;</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Subsequent calls don&#39;t need credentials repeated</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">dp</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">use_ai</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">dp</span><span class="o">.</span><span class="n">suggest</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">use_ai</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="module-2-auto-eda-pipeline">Module 2: Auto EDA Pipeline</h2>
+<h3 id="dpanalyzedf-use_aifalse-ai_providernone-ai_modelnone-api_keynone"><code>dp.analyze(df, use_ai=False, ai_provider=None, ai_model=None, api_key=None)</code></h3>
+<p>Runs all structural checks simultaneously and prints a clean console report.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Standard rule-based analysis</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">dp</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># With configured AI copilot</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">dp</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">use_ai</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="module-3-smart-column-suggestions">Module 3: Smart Column Suggestions</h2>
+<h3 id="dpsuggestdf-use_aifalse-ai_providernone-ai_modelnone-api_keynone"><code>dp.suggest(df, use_ai=False, ai_provider=None, ai_model=None, api_key=None)</code></h3>
+<p>Analyses every column and returns actionable, rule-based preprocessing recommendations. Enables optional <code>use_ai=True</code> to append expert AI comments.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">suggestions</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">suggest</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">use_ai</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="module-4-dataset-analysis-api">Module 4: Dataset Analysis API</h2>
+<h3 id="dpsummarydf"><code>dp.summary(df)</code></h3>
+<p>Returns a high-level overview dict:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">meta</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># {&#39;rows&#39;: 891, &#39;columns&#39;: 12, &#39;memory_usage_mb&#39;: 0.08, &#39;engine_detected&#39;: &#39;pandas&#39;, ...}</span>
+</span></code></pre></div></p>
+<h3 id="dpmissingdf"><code>dp.missing(df)</code></h3>
+<p>Returns sorted DataFrame showing column null counts and percentages.</p>
+<h3 id="dpduplicatesdf"><code>dp.duplicates(df)</code></h3>
+<p>Checks for exact duplicate rows across all CPU cores.</p>
+<h3 id="dpcorrelationdf-threshold06"><code>dp.correlation(df, threshold=0.6)</code></h3>
+<p>Calculates the Pearson correlation matrix for all numeric columns, flagging strong pairs.</p>
+<hr />
+<h2 id="module-5-outlier-detection">Module 5: Outlier Detection</h2>
+<h3 id="dpoutliersdf-methodboth-z_threshold30-iqr_multiplier15-use_aifalse"><code>dp.outliers(df, method="both", z_threshold=3.0, iqr_multiplier=1.5, use_ai=False, ...)</code></h3>
+<p>Detects outliers across numeric columns using <strong>IQR fencing</strong> and/or <strong>Z-score</strong>. Set <code>use_ai=True</code> to receive AI recommendations on how to handle them.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">outliers</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">use_ai</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="module-6-auto-data-cleaning">Module 6: Auto Data Cleaning</h2>
+<h3 id="dpauto_cleandf-drop_null_threshold06-impute_strategyauto-drop_id_columnstrue-drop_constant_columnstrue-use_aifalse"><code>dp.auto_clean(df, drop_null_threshold=0.6, impute_strategy="auto", drop_id_columns=True, drop_constant_columns=True, use_ai=False, ...)</code></h3>
+<p>Automatically cleans the dataset and logs changes. Enabling <code>use_ai=True</code> appends a conversational explanation of why the actions improve model quality.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">clean_df</span><span class="p">,</span> <span class="n">change_log</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">auto_clean</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">use_ai</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="module-7-traintest-drift-detection">Module 7: Train/Test Drift Detection</h2>
+<h3 id="dpcomparedf_train-df_test-threshold01-use_aifalse"><code>dp.compare(df_train, df_test, threshold=0.1, use_ai=False, ...)</code></h3>
+<p>Detects distribution shift between training and test datasets. Uses Jensen-Shannon divergence for categoricals. Enabling <code>use_ai=True</code> yields AI-suggested mitigation strategies.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">flags</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span><span class="p">,</span> <span class="n">use_ai</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="module-8-conversational-ai-ask-ai">Module 8: Conversational AI (Ask AI)</h2>
+<h3 id="dpask_aidf-question-ai_providernone-ai_modelnone-api_keynone"><code>dp.ask_ai(df, question, ai_provider=None, ai_model=None, api_key=None)</code></h3>
+<p>Ask free-form natural-language questions about your dataset. Only statistical metadata is transmitted to the AI — never raw rows.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">dp</span><span class="o">.</span><span class="n">ask_ai</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;Which features carry the most risk of data leakage?&quot;</span><span class="p">)</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">dp</span><span class="o">.</span><span class="n">ask_ai</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;Should I log-transform Fare or normalise Age first?&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<hr />
+<h2 id="module-9-visualization-engine">Module 9: Visualization Engine</h2>
+<p>Includes publication-ready, interactive Plotly charts with a dark theme (<code>plotly_dark</code>) and automatic statistical overlays. </p>
+<p><strong>Note:</strong> All manual charting functions return a Plotly <code>Figure</code> object. In Jupyter Notebooks, simply returning the figure displays it. In standard Python scripts, you must call <code>.show()</code> on the returned figure to view it.</p>
+<h3 id="dphistdf-column-binsauto-huenone-color3b82f6"><code>dp.hist(df, column, bins="auto", hue=None, color="#3b82f6")</code></h3>
+<p>Interactive histogram with automatic KDE overlay, plus mean and median dashed lines.
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">fig</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;Age&quot;</span><span class="p">)</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>  <span class="c1"># Required in standard scripts</span>
+</span></code></pre></div></p>
+<h3 id="dpboxdf-column-group_bynone-orientv"><code>dp.box(df, column, group_by=None, orient="v")</code></h3>
+<p>Interactive box plot with median highlights and automatic IQR annotation.</p>
+<h3 id="dpheatmapdf"><code>dp.heatmap(df)</code></h3>
+<p>Interactive Pearson correlation matrix heatmap with hover tooltips.</p>
+<h3 id="dpscatterdf-x-y-huenone-trendlinetrue"><code>dp.scatter(df, x, y, hue=None, trendline=True)</code></h3>
+<p>Interactive scatter plot with optional OLS regression trendline.</p>
+<h3 id="dpviolindf-column-group_bynone"><code>dp.violin(df, column, group_by=None)</code></h3>
+<p>Interactive violin plot combining box plot and KDE for rich distribution insights.</p>
+<h3 id="dpvisualize_aidf-prompt-ai_providernone-ai_modelnone-api_keynone"><code>dp.visualize_ai(df, prompt, ai_provider=None, ai_model=None, api_key=None)</code></h3>
+<p>Ask the AI to choose and draw the right interactive chart from a plain-English prompt.
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">dp</span><span class="o">.</span><span class="n">visualize_ai</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;Show the relation between Age and Survived&quot;</span><span class="p">)</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">dp</span><span class="o">.</span><span class="n">visualize_ai</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;Distribution of Fare for each passenger class&quot;</span><span class="p">)</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">dp</span><span class="o">.</span><span class="n">visualize_ai</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;Correlation heatmap of numeric columns&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+<hr />
+<h2 id="module-10-machine-learning-diagnostics">Module 10: Machine Learning Diagnostics</h2>
+<h3 id="dpclassification_reporty_true-y_pred-averageauto"><code>dp.classification_report(y_true, y_pred, average="auto")</code></h3>
+<p>Calculates binary or multi-class metrics safely.</p>
+<h3 id="dpregression_reporty_true-y_pred"><code>dp.regression_report(y_true, y_pred)</code></h3>
+<p>Calculates MAE, MSE, RMSE, R², MAPE, and Max Error.</p>
+<h3 id="dpdiagnosetrain_score-test_score-metric_nameaccuracy"><code>dp.diagnose(train_score, test_score, metric_name="Accuracy")</code></h3>
+<p>Evaluates train/test performance gaps to diagnose overfitting or underfitting.</p>
+<hr />
+<h2 id="module-11-standalone-html-dashboard">Module 11: Standalone HTML Dashboard</h2>
+<h3 id="dpdashboarddf-output_pathdatapilot_reporthtml"><code>dp.dashboard(df, output_path="datapilot_report.html")</code></h3>
+<p>Generates a complete, <strong>offline-ready</strong> HTML dashboard report containing metrics, datatype profiles, missing value charts, and correlation heatmap matrix. Features a premium glassmorphic dark-mode UI with embedded interactive Plotly charts.</p>
+<hr />
+<h2 id="module-12-performance-benchmark">Module 12: Performance Benchmark</h2>
+<h3 id="dpbenchmarkdf"><code>dp.benchmark(df)</code></h3>
+<p>Benchmarks DataPilot (Polars core) operations against equivalent Pandas operations.</p>
+<hr />
+<h2 id="module-13-datapilot-web-studio">Module 13: DataPilot Web Studio</h2>
+<h3 id="dplaunch_studioport8501"><code>dp.launch_studio(port=8501)</code></h3>
+<p>Launches a completely interactive, no-code local Streamlit application in your web browser. 
+Users can drag-and-drop CSV files, view the glassmorphic dashboard in real-time, and chat with their data natively.</p>
+<p><em>Requires the <code>studio</code> extra: <code>pip install datapilot-polars[studio]</code></em></p>
+<hr />
+<h2 id="module-14-ai-copilot-providers">Module 14: AI Copilot Providers</h2>
+<p>DataPilot uses a <strong>Metadata-Only AI Pattern</strong> — raw data rows are <strong>never</strong> transmitted. Only statistical summaries are sent.</p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Type</th>
+<th>Default Model</th>
+<th>Requires</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ollama</code></td>
+<td>🔒 Local / Private</td>
+<td><code>llama3</code></td>
+<td>Ollama daemon running locally</td>
+</tr>
+<tr>
+<td><code>openai</code></td>
+<td>☁️ Cloud</td>
+<td><code>gpt-4o-mini</code></td>
+<td><code>pip install datapilot-polars[openai]</code> + API key</td>
+</tr>
+<tr>
+<td><code>gemini</code></td>
+<td>☁️ Cloud</td>
+<td><code>gemini-1.5-flash</code></td>
+<td><code>pip install datapilot-polars[gemini]</code> + API key</td>
+</tr>
+<tr>
+<td><code>claude</code></td>
+<td>☁️ Cloud</td>
+<td><code>claude-3-haiku-20240307</code></td>
+<td><code>pip install datapilot-polars[claude]</code> + API key</td>
+</tr>
+<tr>
+<td><code>groq</code></td>
+<td>☁️ Cloud (free tier)</td>
+<td><code>llama3-70b-8192</code></td>
+<td><code>pip install datapilot-polars[groq]</code> + API key</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="modulenotfounderror-after-editing-files"><code>ModuleNotFoundError</code> after editing files</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w"> </span>--force-reinstall
+</span></code></pre></div>
+<h3 id="ai-ollama-connection-refused">AI: Ollama Connection Refused</h3>
+<p>Ensure the local daemon is active:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ollama<span class="w"> </span>serve
+</span></code></pre></div></p>
+<h3 id="running-tests">Running Tests</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>pytest<span class="w"> </span>-v
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>pytest<span class="w"> </span>--cov<span class="o">=</span>datapilot
+</span></code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
